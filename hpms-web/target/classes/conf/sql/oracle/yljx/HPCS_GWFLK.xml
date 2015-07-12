@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="hpcs_gwflk">
+	
+	<sql id="query_combobox">
+		select t.gwbm id, t.gwmc text from hpcs_gwflk t
+	</sql>
+</sqls>

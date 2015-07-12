@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="bpc_cjsjcx">
+	<sql id="query_cjsjcx">
+		<dynamic>
+			select B.ND,B.YD,B.DXBM,B.DXMC,B.DXSJZ,B.ZCDXBM,B.ZCDXLX,B.DXLYBM,B.YYSJ,B.STATUS 
+			from BPC_SM005 B where 1=1
+		</dynamic>
+			<dynamic>
+				<if name="nd" test="notNull">
+					and B.ND=:nd
+				</if>
+			</dynamic>
+			<dynamic>
+				<if name="yd" test="notNull">
+					and B.YD=:yd
+				</if>
+			</dynamic>
+			<dynamic>
+				<if name="dxbm" test="notNull">
+					and B.DXBM like '%'||:dxbm||'%'
+				</if>
+			</dynamic>
+			<dynamic>
+				<if name="dxmc" test="notNull">
+					and B.DXMC like '%'||:dxmc||'%'
+				</if>
+			</dynamic>
+ 		<dynamic>
+ 		order by B.ND DESC,B.YD DESC,B.DXBM
+ 		</dynamic>
+	</sql>
+</sqls>

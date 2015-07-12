@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="PBCS_KSBBSY">
+	<sql id="query">
+		<dynamic>
+			select t.SYLSH,t.SYMC,t.BZ,t.CJR,t.CJSJ,t.XGR,t.XGSJ,t.ZT
+			from
+			PBCS_KSBBSY t where 1=1
+		</dynamic>
+	</sql>
+</sqls>

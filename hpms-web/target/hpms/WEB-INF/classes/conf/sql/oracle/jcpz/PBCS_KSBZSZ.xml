@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="pbcs_ksbzsz">
+	
+	<!-- 分页页面显示-->
+	<sql id="find">
+		<dynamic>
+		SELECT s.lsh, k.ksmc, s.ksnm, s.nd, s.yd, s.bzs FROM HPXT_KSZCXX K  LEFT JOIN PBCS_KSBZSZ S
+			ON (K.KSNM=S.KSNM
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				AND S.ND= :nd 
+			</if>
+			<if name="yd" test="notNull">
+				AND S.YD= :yd	
+			</if>
+		</dynamic>
+		<dynamic>
+			)
+		WHERE 1=1 AND K.JB='2' order by k.ksnm
+		</dynamic>
+	</sql>
+	
+	<!-- 不分页页面显示 -->
+	<sql id="listByNy">
+		<dynamic>
+		SELECT s.lsh, k.ksmc, s.ksnm, s.nd, s.yd, s.bzs FROM HPXT_KSZCXX K  LEFT JOIN PBCS_KSBZSZ S
+			ON (K.KSNM=S.KSNM
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				AND S.ND= :nd 
+			</if>
+			<if name="yd" test="notNull">
+				AND S.YD= :yd	
+			</if>
+		</dynamic>
+		<dynamic>
+			)
+		WHERE 1=1 AND K.JB='2' order by k.ksnm
+		</dynamic>
+	</sql>
+</sqls>

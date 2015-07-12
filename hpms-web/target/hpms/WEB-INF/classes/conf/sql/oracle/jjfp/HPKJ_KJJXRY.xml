@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="kjjxry">
+
+	<sql id="queryAll">
+		<dynamic>
+			select
+			t5.ygbh, 
+			t5.ygxm,
+			sum(case
+			when t4.xmbm = 'A' then
+			nvl(t1.fz, 0)
+			else
+			0
+			end) as "A",
+			sum(case
+			when t4.xmbm = 'B' then
+			nvl(t1.fz, 0)
+			else
+			0
+			end) as "B",
+			sum(case
+			when t4.xmbm = 'C' then
+			nvl(t1.fz, 0)
+			else
+			0
+			end) as
+			"C",
+			sum(case
+			when t4.xmbm = 'D' then
+			nvl(t1.fz, 0)
+			else
+			0
+			end) as "D",
+			sum(case
+			when t4.xmbm = 'E' then
+			nvl(t1.fz, 0)
+			else
+			0
+			end) as "E",
+			sum(case
+			when t4.xmbm = 'F' then
+			nvl(t1.fz, 0)
+			else
+			0
+			end) as "F",
+			sum(case
+			when t4.xmbm = 'G' then
+			nvl(t1.fz, 0)
+			else
+			0
+			end) as "G",
+			sum(case
+			when t4.xmbm = 'H' then
+			nvl(t1.fz, 0)
+			else
+			0
+			end) as "H",
+			sum(case
+			when t4.xmbm = 'I' then
+			nvl(t1.fz, 0)
+			else
+			0
+			end) as "I",
+			sum(case
+			when t4.xmbm = 'J' then
+			nvl(t1.fz, 0)
+			else
+			0
+			end) as "J",
+			sum(case
+			when t4.xmbm = 'K' then
+			nvl(t1.fz, 0)
+			else
+			0
+			end) as "K",
+			sum(case
+			when t4.xmbm = 'L' then
+			nvl(t1.fz, 0)
+			else
+			0
+			end) as "L",
+			sum(nvl(t1.fz, 0)) as "HJ"
+			from HPXT_YGZCXX t5
+			left join
+			HPKJ_KJGRMX t1
+			on t1.ygbh = t5.ygbh
+			left join HPXT_KSZCXX t2
+			on t5.ksnm
+			= t2.ksnm
+			and t2.zt = '1'
+			left join HPKJ_KJXMPF t3
+			on t1.smbm = t3.smbm
+			and t3.status = '1'
+			left join HPKJ_KJXMZD t4
+			on t3.kjbm = t4.kjbm
+			and
+			t4.status = '1'
+			left join HPKJ_KJXMMX t6
+			on t1.xmid = t6.xmid
+			where
+			t5.zt='1'
+		</dynamic>
+		<dynamic>
+			<if name="startTime" test="notNull">
+				and t6.rhsj &gt;=
+				to_date(:startTime,'yyyy-mm')
+			</if>
+			<if name="endTime" test="notNull">
+				and t6.rhsj &lt;=
+				to_date(:endTime,'yyyy-mm')
+			</if>
+			<if name="ksdm" test="notNull">
+				and t2.ksnm=:ksdm
+			</if>
+			<if name="zc" test="notNull">
+				and t5.ZYJSZWLB=:zc
+			</if>
+
+		</dynamic>
+		<dynamic>
+			group by t5.ygbh, t5.ygxm,t5.zwzc
+		</dynamic>
+	</sql>
+</sqls>

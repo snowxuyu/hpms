@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="bpe_ndcs">
+	<sql id="query_ndcs">
+		select B.JXBH,B.JXND,B.JXQY,B.JXLX,B.ZQLX,NVl(B.JXDJ,0) JXDJ,B.REMARK,B.CREATOR,
+		B.CREATEAT,B.MODIFOR,B.MODIFYAT,B.STATUS from BPE_JX001 B WHERE 1=1
+        <dynamic>
+          <if name="nd" test="notNull">
+			  and TO_DATE(B.JXND,'YYYY') =TO_DATE(:nd, 'YYYY')
+		  </if>
+        </dynamic>
+        <dynamic>
+        order  by B.JXND desc
+        </dynamic>
+	</sql>
+	
+</sqls>

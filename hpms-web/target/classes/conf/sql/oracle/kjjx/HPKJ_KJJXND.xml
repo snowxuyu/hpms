@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="kjjxnd">
+
+	<sql id="queryAll">
+		<dynamic>
+			select t1.ksnm,
+			t1.ksmc,
+			sum(kydf) kydf,
+			sum(jxdf) jxdf,
+			decode(sum(nvl(jxdf,0)+nvl(kydf,0)),0,'',sum(nvl(jxdf,0)+nvl(kydf,0)))
+			zf,
+			decode(rtrim(to_char(sum(nvl(t3.jxdf,0) / t2.zrs),
+			'fm99999999990.99'), '.'),0,'',rtrim(to_char(sum(nvl(t3.jxdf,0) /
+			t2.zrs),
+			'fm99999999990.99'), '.')) jxavg,
+			decode(
+			rtrim(to_char(sum(nvl(t3.kydf,0) / t2.kyrs),
+			'fm99999999990.99'),
+			'.'),0,'',rtrim(to_char(sum(nvl(t3.kydf,0) / t2.kyrs),
+			'fm99999999990.99'), '.'))
+			kyavg,
+			decode(
+			rtrim(to_char(
+			nvl(sum(nvl(t3.kydf,0)
+			/ t2.kyrs),0)+ nvl(sum(nvl(t3.jxdf,0) /
+			t2.zrs),0),
+			'fm99999999990.99'),
+			'.'),0,'',rtrim(to_char(
+			nvl(sum(nvl(t3.kydf,0)
+			/ t2.kyrs),0)+ nvl(sum(nvl(t3.jxdf,0) /
+			t2.zrs),0),
+			'fm99999999990.99'),
+			'.')) avg
+			from
+			HPXT_KSZCXX t1
+			left join
+			(select ksnm,
+			count(1) zrs,
+			sum((case
+			when zwlb =
+			'01' then
+			1.5
+			when zwlb
+			=
+			'02' then
+			1
+			when zwlb = '03' then
+			0.5
+			end)) kyrs
+			from HPXT_YGZCXX
+			group
+			by
+			ksnm) t2
+			on
+			t1.ksnm = t2.ksnm
+			left join (select
+			ksnm,
+			rtrim(to_char(sum(case
+			when
+			substr(smbm, 1, 1) in
+			('A', 'B', 'C',
+			'D',
+			'E', 'F', 'K', 'L') then
+			fz
+			end),
+			'fm99999999990.99'),
+			'.')
+			as kydf,
+			rtrim(to_char(sum(case
+			when
+			substr(smbm, 1, 1) in ('G', 'H',
+			'I', 'J')
+			then
+			fz
+			end),
+			'fm99999999990.99'),
+			'.') as
+			jxdf,rhsj
+			from HPKJ_KJGRMX t1
+			inner join
+			HPKJ_KJXMMX t2 on
+			t1.xmid=t2.xmid
+			group by ksnm,rhsj) t3
+			on
+			t1.ksnm =
+			t3.ksnm
+			where 1=1
+			and t1.jb = '2'
+		</dynamic>
+		<dynamic>
+			<if name="startTime" test="notNull">
+				and rhsj &gt;=
+				to_date(:startTime,'yyyy-mm')
+			</if>
+			<if name="endTime" test="notNull">
+				and rhsj &lt;=
+				to_date(:endTime,'yyyy-mm')
+			</if>
+			<if name="ksdm" test="notNull">
+				and t1.kslb=:ksdm
+			</if>
+
+		</dynamic>
+		<dynamic>
+			group by t1.ksnm,t1.ksmc,t2.kyrs,t2.zrs,t1.kslb
+		</dynamic>
+	</sql>
+
+
+	<sql id="exporAll">
+		<dynamic>
+			select t1.ksnm,
+			t1.ksmc,
+			nvl(sum(kydf),0) kydf,
+			nvl(sum(jxdf),0) jxdf,
+			nvl(sum(jxdf+kydf),0) zf,
+			nvl(rtrim(to_char(sum(t3.kydf / t2.kyrs),
+			'fm99999999990.99'),
+			'.'),0)
+			kyavg,
+			nvl(rtrim(to_char(sum(t3.jxdf / t2.zrs),
+			'fm99999999990.99'),
+			'.'),0)
+			jxavg,
+			rtrim(to_char(
+			nvl(sum(nvl(t3.kydf,0)
+			/ t2.kyrs),0)+
+			nvl(sum(nvl(t3.jxdf,0) /
+			t2.zrs),0),
+			'fm99999999990.99'),
+			'.') avg
+			from
+			HPXT_KSZCXX t1
+			left join
+			(select
+			ksnm,
+			count(1) zrs,
+			sum((case
+			when zwlb =
+			'01' then
+			1.5
+			when zwlb
+			= '02'
+			then
+			1
+			when zwlb = '03' then
+			0.5
+			end)) kyrs
+			from HPXT_YGZCXX
+			group
+			by ksnm)
+			t2
+			on t1.ksnm = t2.ksnm
+			left join (select
+			ksnm,
+			rtrim(to_char(sum(case
+			when substr(smbm, 1, 1) in
+			('A', 'B', 'C',
+			'D',
+			'E', 'F', 'K', 'L')
+			then
+			nvl(fz, 0)
+			else
+			0
+			end),
+			'fm99999999990.99'),
+			'.')
+			as kydf,
+			rtrim(to_char(sum(case
+			when substr(smbm, 1, 1) in ('G',
+			'H',
+			'I', 'J')
+			then
+			nvl(fz, 0)
+			else
+			0
+			end),
+			'fm99999999990.99'),
+			'.') as
+			jxdf,rhsj
+			from
+			HPKJ_KJGRMX t1
+			inner join HPKJ_KJXMMX t2 on
+			t1.xmid=t2.xmid
+			group by
+			ksnm,rhsj) t3
+			on t1.ksnm = t3.ksnm
+			where 1=1
+			and
+			t1.jb = '2'
+		</dynamic>
+		<dynamic>
+			<if name="startTime" test="notNull">
+				and rhsj &gt;=
+				to_date(:startTime,'yyyy-mm')
+			</if>
+			<if name="endTime" test="notNull">
+				and rhsj &lt;=
+				to_date(:endTime,'yyyy-mm')
+			</if>
+			<if name="ksdm" test="notNull">
+				and t1.kslb=:ksdm
+			</if>
+
+		</dynamic>
+		<dynamic>
+			group by t1.ksnm,t1.ksmc,t2.kyrs,t2.zrs,t1.kslb
+		</dynamic>
+	</sql>
+</sqls>

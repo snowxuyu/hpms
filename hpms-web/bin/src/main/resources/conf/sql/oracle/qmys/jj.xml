@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="qmys_jj">
+		
+		<!-- 根据员工编号查找 -->
+	<sql id="query_ky">
+		<dynamic>
+			select a.ygbh, b.ygxm, sum(a.bhl) grbhgz, c.pjxs, c.myd, sum(d.zxjj) zxjj
+			  from HPXT_YGZCXX b, HPXC_XCKSJS c, HPBH_BHGRMX a
+			  left join HPXC_XCGRJS d
+			    on a.ksnm = d.ksnm
+			   and a.ygbh = d.ygbh
+			   and a.nd = d.nd
+			   and a.yd = d.yd
+			 where a.ksnm = b.ksnm
+			   and a.ksnm = c.ksnm
+			   and a.ygbh = b.ygbh
+			   and a.nd = c.nd
+			   and a.yd = c.yd
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and a.nd =:nd
+			</if>
+			<if name="yd" test="notNull">
+				and a.yd =:yd
+			</if>
+			<if name="ygbh" test="notNull">
+				and a.ygbh =:ygbh
+			</if>
+		</dynamic>
+		<dynamic>
+			group by a.ygbh, b.ygxm, c.pjxs, c.myd
+		</dynamic>
+	</sql>
+		
+		<sql id="query_gr">
+		 	<dynamic>
+		 		  select z.ygbh, a.ygxm,z.ksnm, (x.ycgzl+x.ecgzl) grbhgz, d.dj, d.pjxs, d.myd,x.zxjj, (x.ycgzl+x.ecgzl)*d.dj sfjj
+             from hpxt_rygxpz z
+             , hpxt_ygzcxx a
+             , hpxc_xcgrjs x
+             , hpbh_bhksjs j
+             , hpxc_xcksjs d
+             where 1=1
+				     and z.ygbh=a.ygbh
+             and z.ygbh=x.ygbh and z.nd=x.nd and z.yd=x.yd
+            and z.ksnm=j.ksnm and z.nd=j.nd and z.yd=j.yd
+            and z.ksnm=d.ksnm and z.nd=d.nd and z.yd=d.yd
+		 	</dynamic>
+		 	<dynamic>
+			<if name="ksnm" test="notNull">
+				and z.ksnm=:ksnm
+			</if>
+			<if name="ygbh" test="notNull">
+				and z.ygbh=:ygbh
+			</if>
+			</dynamic>
+			<dynamic>
+				<if name="nd" test="notNull">
+					and z.nd=:nd
+				</if>
+			</dynamic>
+			<dynamic>
+				<if name="yd" test="notNull">
+					and z.yd=:yd
+				</if>
+			</dynamic>
+		</sql>
+		
+		<sql id="query_gr2">
+		 	<dynamic>
+		 		  select z.ygbh, a.ygxm,d.kspjj,z.ygxs,c.pjxs,c.myd,(d.kspjj*c.pjxs*c.myd*z.ygxs) sfjj
+             from hpxt_rygxpz z
+             , hpxt_ygzcxx a
+             ,HPXC_XCKSJS c
+             ,HPCS_QYPJJJ d
+             where 1=1
+				     and z.ygbh=a.ygbh and z.ksnm = a.ksnm
+             and z.nd = c.nd and z.yd = c.yd and a.ksnm = c.ksnm
+             and z.nd = d.nd and z.yd = d.yd and a.ksnm = d.ksnm
+		 	</dynamic>
+		 	<dynamic>
+			<if name="ksnm" test="notNull">
+				and z.ksnm=:ksnm
+			</if>
+			</dynamic>
+			<dynamic>
+				<if name="nd" test="notNull">
+					and z.nd=:nd
+				</if>
+			</dynamic>
+			<dynamic>
+				<if name="yd" test="notNull">
+					and z.yd=:yd
+				</if>
+			</dynamic>
+		</sql>
+		<!-- <sql id="querySum"> 
+			<dynamic>
+				select (sum(YCGZL)+sum(ECGZL)) hj from HPXC_XCGRJS where 1=1
+			</dynamic>
+			<dynamic>
+				<if name="ksnm" test="notNull">
+					and ksnm=:ksnm
+				</if>
+			</dynamic>
+			<dynamic>
+				<if name="nd" test="notNull">
+					and nd=:nd
+				</if>
+			</dynamic>
+			<dynamic>
+				<if name="yd" test="notNull">
+					and yd=:yd
+				</if>
+			</dynamic>
+		</sql> -->
+</sqls>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="PBCS_ZYBFFVO">
+	<sql id="query">
+		<dynamic>
+			SELECT HK.KSMC,HY.YGXM,sum(DECODE(HB.BBMC,'中班',PK.BBJS)) as zbs,sum(DECODE(HB.BBMC,'夜班',PK.BBJS)) as ybs
+			FROM PBCS_KSPBMX PK
+			INNER JOIN HPXT_YGZCXX HY ON PK.YGBH = HY.YGBH
+			INNER JOIN HPCS_BBFLK HB ON PK.BBBM = HB.BBBM
+			INNER JOIN HPXT_KSZCXX HK ON HY.KSNM=HK.KSNM
+			INNER JOIN PBCS_KSBBMX BK ON BK.BBBM = HB.BBBM
+			WHERE 1=1
+		</dynamic>
+		<dynamic>
+			<if name="ksnm" test="notNull">
+				AND HK.KSNM=:ksnm
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="startTime" test="notNull">
+				AND (PK.SJRQ&gt;=TO_DATE(:startTime,'yyyy-MM')
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="endTime" test="notNull">
+				AND PK.SJRQ&lt;=TO_DATE(:endTime,'yyyy-MM'))
+			</if>
+		</dynamic>
+		<dynamic>
+				group by HK.KSMC,HY.YGXM
+		</dynamic>
+	</sql>
+	
+	<sql id="querySum">
+		<dynamic>
+			 SELECT HK.KSMC,sum(DECODE(HB.BBMC,'中班',PK.BBJS)) as zbhj,sum(DECODE(HB.BBMC,'夜班',PK.BBJS)) as ybhj
+		      FROM PBCS_KSPBMX PK
+		      INNER JOIN HPXT_YGZCXX HY ON PK.YGBH = HY.YGBH
+		      INNER JOIN HPCS_BBFLK HB ON PK.BBBM = HB.BBBM
+		      INNER JOIN HPXT_KSZCXX HK ON HY.KSNM=HK.KSNM
+		      INNER JOIN PBCS_KSBBMX BK ON BK.BBBM = HB.BBBM
+		      WHERE 1=1
+		</dynamic>
+	  	<dynamic>
+			<if name="ksnm" test="notNull">
+				AND HK.KSNM=:ksnm
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="startTime" test="notNull">
+				AND (PK.SJRQ&gt;=TO_DATE(:startTime,'yyyy-MM')
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="endTime" test="notNull">
+				AND PK.SJRQ&lt;=TO_DATE(:endTime,'yyyy-MM'))
+			</if>
+		</dynamic>
+		<dynamic>
+				group by HK.KSMC
+		</dynamic>
+	</sql>
+</sqls>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="lcbhgzl">
+		
+		
+		<sql id="querygrgzl"> 
+			<dynamic>
+				select ygbh userid,
+				       (case
+				         when (ygbh is null or ygbh = '' or ygbh = 'null') then
+				          ksnm
+				         else
+				          ygmc
+				       end) xm,
+				       sum(bhl) ds,
+				       sum(round(bhl, 1)) bhgzl
+				  from HPBH_BHGRMX a, HPCS_XMLBDZ b
+				 where a.xmlbbm = b.xmlbbm
+			</dynamic>
+			<dynamic>
+				<if name="ksnm" test="notNull">
+					and a.ksnm=:ksnm
+				</if>
+			</dynamic>
+			<dynamic>
+				<if name="nd" test="notNull">
+					and nd=:nd
+				</if>
+			</dynamic>
+			<dynamic>
+				<if name="yd" test="notNull">
+					and yd=:yd
+				</if>
+			</dynamic>
+			<dynamic>
+				 group by ygbh, ksnm,ygmc
+				 order by userid desc 
+			</dynamic>
+		</sql>
+</sqls>

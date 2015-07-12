@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="PBCS_KSPPSZ">
+	<sql id="getTitle">
+		select
+		'[{title:''日期''},'||wm_concat('{field:'''||to_char(to_date('2015-02-01','yyyy-mm-dd')+level-1,'yyyy-mm-dd')||''',title:'''||to_char(to_date('2015-02','yyyy-mm')+level-1,'dd')||'''}')||'],[{title:''星期''},'||wm_concat('{title:'''||substr(to_char(to_date('2015-02','yyyy-mm')+level-1,'day'),3,4)||'''}')||']'
+		as
+		"p1" from dual
+		connect by level
+		&lt;=last_day(to_date('2015-02','yyyy-mm'))-to_date('2015-02-01','yyyy-mm-dd')+1
+	</sql>
+</sqls>

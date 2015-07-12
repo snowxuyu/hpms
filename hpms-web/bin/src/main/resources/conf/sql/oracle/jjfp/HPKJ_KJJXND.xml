@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="kjjxnd">
+
+	<sql id="queryAll">
+		<dynamic>
+		select t2.ksnm as "ksdm",
+		t2.ksmc as "ksmc",
+		sum(case
+		when t4.xmbm in ('A', 'B', 'C', 'D', 'E', 'F', 'K', 'L') then
+		nvl(t1.fz, 0)
+		else
+		0
+		end) as "kydf",
+		sum(case
+		when t4.xmbm in ('G', 'H', 'I', 'J') then
+		nvl(t1.fz, 0)
+		else
+		0
+		end) as "jxdf",
+		sum(case
+		when t4.xmbm in
+		('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L') then
+		nvl(t1.fz, 0)
+		else
+		0
+		end) as "zf",
+		sum(case
+		when t4.xmbm in ('A', 'B', 'C', 'D', 'E', 'F', 'K', 'L') then
+		nvl(t1.fz, 0)
+		else
+		0
+		end) / sum((case
+		when t5.zyjszwlb = '0' then
+		1.5
+		when t5.zyjszwlb = '1' then
+		1
+		when t5.zyjszwlb = '2' then
+		0.5
+		end)) as "kyavg",sum(case
+		when t4.xmbm in ('G', 'H', 'I', 'J') then
+		nvl(t1.fz, 0)
+		else
+		0
+		end)/count(1) as "jxavg",
+		sum(case
+		when t4.xmbm in
+		('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L') then
+		nvl(t1.fz, 0)
+		else
+		0
+		end) / count(1) as "avg"
+		from HPXT_KSZCXX t2
+		left join HPKJ_KJGRMX t1
+		on t1.ksnm = t2.ksnm
+		and t1.zt = '1'
+		left join HPKJ_KJXMPF t3
+		on t1.smbm = t3.smbm
+		and t3.status = '1'
+		left join HPKJ_KJXMZD t4
+		on t3.kjbm = t4.kjbm
+		and t4.status = '1'
+		left join HPXT_YGZCXX t5
+		on t1.ygbh = t5.ygbh
+		left join HPKJ_KJXMMX t6
+		on t1.xmid = t6.xmid
+		and t5.zt = '1'
+		where t2.zt = '1'
+		</dynamic>
+		<dynamic>
+			<if name="startTime" test="notNull">
+				and t6.rhsj &gt; to_date(:startTime,'yyyy-mm')
+			</if>
+			<if name="endTime" test="notNull">
+				and t6.rhsj &lt;= to_date(:endTime,'yyyy-mm')
+			</if>
+			<if name="ksdm" test="notNull">
+				and t2.ksnm=:ksdm
+			</if>
+			
+		</dynamic>
+		<dynamic>
+			group by t2.ksmc, t2.ksnm
+		</dynamic>
+	</sql>
+</sqls>

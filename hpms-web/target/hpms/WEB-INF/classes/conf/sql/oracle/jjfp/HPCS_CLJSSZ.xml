@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="hpcs_cljssz">
+	
+	<sql id="queryksnm">
+		select distinct ksnm from Hpxt_Kszcxx where jb = '2'
+	</sql>
+	
+	<sql id="findAll">
+		select cl.lsh, cl.nd, cl.yd, cl.ksnm, ks.ksmc, cl.kscl
+	      from HPCS_CLJSSZ cl
+	      left join HPXT_KSZCXX ks
+	        on cl.ksnm = ks.ksnm
+	    order by cl.nd desc, cl.yd desc, ks.ksnm asc
+	</sql>
+	
+	<sql id="findByPage">
+		<dynamic>
+			select cl.lsh, cl.nd, cl.yd, cl.ksnm, ks.ksmc, cl.kscl
+			  from HPCS_CLJSSZ cl
+			  left join HPXT_KSZCXX ks
+			    on cl.ksnm = ks.ksnm
+			 where 1 = 1
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and cl.nd = :nd 
+			</if>
+			<if name="yd" test="notNull">
+				and cl.yd = :yd
+			</if>
+		</dynamic>
+		<dynamic>
+			order by cl.nd desc, cl.yd desc, ks.ksnm asc
+		</dynamic>
+	</sql>
+	
+		<sql id="findByNY">
+		<dynamic>
+			select cl.lsh,
+		       cl.kscl,
+		       k1.ksnm,
+		       (case when k1.kslb = 'A' then '临床科室' when k1.kslb = 'B' then '医技科室' when
+		        k1.kslb = 'C' then '医辅科室' when k1.kslb = 'D' then '行政科室' end) ksfl,
+		       k1.ksmc ejks,
+		       k2.ksmc yjks
+		  from HPXT_KSZCXX k1, HPXT_KSZCXX k2, HPCS_CLJSSZ cl
+		 where k1.fjbm = k2.ksnm
+		   and cl.ksnm = k1.ksnm
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and cl.nd = :nd 
+			</if>
+			<if name="yd" test="notNull">
+				and cl.yd = :yd
+			</if>
+		</dynamic>
+	</sql>
+	
+	<sql id="sum_kscl">
+		<dynamic>
+			select sum(kscl) kscl from HPCS_CLJSSZ where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and nd = :nd 
+			</if>
+			<if name="yd" test="notNull">
+				and yd = :yd
+			</if>
+		</dynamic>
+	</sql>
+	
+</sqls>

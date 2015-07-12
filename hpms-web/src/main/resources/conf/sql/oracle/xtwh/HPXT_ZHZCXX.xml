@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="hpxt_zhzcxx">
+	
+	<sql id="query_zh">
+		<dynamic>
+			select t.* from HPXT_ZHZCXX t where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="zh" test="notNull">
+				and t.ygbh = :zh
+			</if>
+			<if name="mm" test="notNull">
+				and t.zhmm = :mm
+			</if>
+		</dynamic>
+	</sql>
+	
+	<sql id="query_ygxx">
+		<dynamic>
+			select a.*, c.ksmc from HPXT_YGZCXX a
+		      left join HPXT_ZHZCXX b
+		      on a.ygbh = b.ygbh
+		      left join HPXT_KSZCXX c
+		      on a.ksnm = c.ksnm
+		</dynamic>
+		<dynamic>
+			<if name="zhnm" test="notNull">
+				where b.zhnm = :zhnm
+			</if>
+		</dynamic>
+	</sql>
+</sqls>

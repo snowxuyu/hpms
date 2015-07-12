@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="hpxt_zddmzc">
+	
+	<sql id="query_flbm">
+		<dynamic>
+			select t.* from HPXT_ZDDMZC t 
+		</dynamic>
+		<dynamic>
+			<if name="flbm" test="notNull">
+				where t.flbm = :flbm
+			</if>
+		</dynamic>
+	</sql>
+</sqls>

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="kjxmmx">
+
+	<sql id="queryAll">
+		<dynamic>
+		select a.xmid,a.kjbm,a.rhnd,a.rhsj,a.dysm,a.dysmmc,
+       	a.desm,a.desmmc,a.dssm,a.dssmmc,a.dsism,a.dsismmc,a.dwsm,a.dwsmmc,
+       	a.kz1,a.kz2,b.xmbm,b.xmmc,b.lbbm,b.lbmc,b.jbbm,b.jbmc from hpkj_kjxmmx a
+    	left join hpkj_kjxmzd b on a.kjbm=b.kjbm 
+    	where 1=1
+    	</dynamic>
+		<dynamic>
+			<if name="startTime" test="notNull">
+				and (a.rhsj&gt;=TO_DATE(:startTime,'yyyy-MM')
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="endTime" test="notNull">
+				and a.rhsj&lt;=TO_DATE(:endTime,'yyyy-MM'))
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="xmbm" test="notNull">
+				and b.xmbm=:xmbm
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="xm" test="notNull">
+				AND (a.dysmmc LIKE '%'||:xm||'%' 
+			</if>
+			<if name="xm" test="notNull">
+			   OR a.desmmc LIKE '%'||:xm||'%' 
+			</if>
+			<if name="xm" test="notNull">
+				 OR a.dssmmc LIKE '%'||:xm||'%' 
+			</if>
+			<if name="xm" test="notNull">
+				 OR a.dsismmc LIKE '%'||:xm||'%' 
+			</if>
+			<if name="xm" test="notNull">
+				OR a.dwsmmc LIKE '%'||:xm||'%')
+           	</if>
+		</dynamic>
+		<dynamic>
+			<if name="ksnm" test="notNull">
+				and a.xmid in (select c.xmid from hpkj_kjxmmx c 
+								left join hpkj_kjgrmx d on c.xmid=d.xmid where d.ksnm=:ksnm)
+			</if>
+		</dynamic>
+		<dynamic>
+			order by b.xmbm
+		</dynamic>
+	</sql>
+	
+	<sql id="queryXmmc">
+		select distinct xmbm ,xmmc from HPKJ_KJXMZD order by xmbm
+	</sql>
+	
+	<sql id="queryNd">
+		select distinct jxnd from bpe_jx001 where jxnd is not null
+	</sql>
+	
+	<sql id="query_khbzxm">
+		<dynamic>
+			SELECT XMBM id ,XMMC name FROM hpkj_kjxmzd WHERE 1=1
+		</dynamic>
+		<dynamic>
+			<if name="xmbm" test="notNull">
+				AND XMBM=:xmbm
+			</if>
+		</dynamic>
+		<dynamic>
+			group by xmbm,xmmc
+			ORDER BY XMBM
+		</dynamic>
+	</sql>
+	
+	<sql id="query_khbzlb">
+		<dynamic>
+			SELECT LBBM id,LBMC name FROM hpkj_kjxmzd WHERE 1=1
+		</dynamic>
+		<dynamic>
+			<if name="xmbm" test="notNull">
+				AND XMBM=:xmbm
+			</if>
+		</dynamic>
+		<dynamic>
+			group by lbbm,lbmc
+			ORDER BY LBBM
+		</dynamic>
+	</sql>
+	
+	<sql id="query_khbzjb">
+		<dynamic>
+			SELECT JBBM id,NVL(JBMC,'') name FROM hpkj_kjxmzd WHERE 1=1
+		</dynamic>
+		<dynamic>
+			<if name="lbbm" test="notNull">
+				AND LBBM=:lbbm
+			</if>
+		</dynamic>
+		<dynamic>
+			 group by jbbm,jbmc
+			ORDER BY JBBM
+		</dynamic>
+	</sql>
+	
+	<sql id="query_khbzsm">
+		<dynamic>
+			SELECT a.smbm,a.fz,a.SMBH  ,NVL(a.SMMC,'') SMMC,a.XZRS,b.kjbm FROM hpkj_kjxmpf a
+			left join hpkj_kjxmzd b on b.kjbm = a.kjbm where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="xmbm" test="notNull">
+				AND b.xmbm=:xmbm
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="lbbm" test="notNull">
+				AND b.LBBM=:lbbm
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="jbbm" test="notNull">
+				AND b.JBBM=:jbbm
+			</if>
+		</dynamic>
+		<dynamic>
+			ORDER BY SMBH
+		</dynamic>
+	</sql>
+	<sql id="queryYgxx">
+		<dynamic>
+			select a.ksnm,a.ygbh,a.ygxm,b.ksmc from hpxt_ygzcxx a
+			left join hpxt_kszcxx b on a.ksnm = b.ksnm
+			where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="ygxm" test="notNull">
+				and a.ygxm like '%'||:ygxm||'%'
+			</if>
+		</dynamic>
+		<dynamic>
+			order by a.ksnm,a.ygbh
+		</dynamic>
+	</sql>
+	
+	<sql id="queryByks">
+		<dynamic>
+			select x.*,a+b+c+d+e+f+k+l kypjf, g+h+i+j jypjf from
+			( SELECT K.KSNM,K.KSMC,
+	       SUM(DECODE(H.XMBM,'A',H.FZ,0)) A,
+	       SUM(DECODE(H.XMBM,'B',H.FZ,0)) B,
+	       SUM(DECODE(H.XMBM,'C',H.FZ,0)) C,
+	       SUM(DECODE(H.XMBM,'D',H.FZ,0)) D,
+	       SUM(DECODE(H.XMBM,'E',H.FZ,0)) E,
+	       SUM(DECODE(H.XMBM,'F',H.FZ,0)) F,
+	       SUM(DECODE(H.XMBM,'G',H.FZ,0)) G,
+	       SUM(DECODE(H.XMBM,'H',H.FZ,0)) H,
+	       SUM(DECODE(H.XMBM,'I',H.FZ,0)) I,
+	       SUM(DECODE(H.XMBM,'J',H.FZ,0)) J,
+	       SUM(DECODE(H.XMBM,'K',H.FZ,0)) K,
+	       SUM(DECODE(H.XMBM,'L',H.FZ,0)) L,
+	       SUM(H.FZ) HJ
+		FROM HPXT_KSZCXX K LEFT JOIN (
+			SELECT Z.XMBM,G.KSNM,G.FZ FROM HPKJ_KJXMMX M,HPKJ_KJXMPF P,HPKJ_KJGRMX G,HPKJ_KJXMZD Z
+			WHERE M.KJBM=P.KJBM AND P.SMBM=G.SMBM  AND Z.KJBM=P.KJBM AND M.XMID=G.XMID
+		</dynamic>
+		<dynamic>
+			<if name="startTime" test="notNull">
+				and (m.rhsj&gt;=TO_DATE(:startTime,'yyyy-MM')
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="endTime" test="notNull">
+				and m.rhsj&lt;=TO_DATE(:endTime,'yyyy-MM'))
+			</if>
+		</dynamic>
+		<dynamic>
+				) H ON (K.KSNM=H.KSNM)
+			WHERE K.JB='2'
+		</dynamic>
+		<dynamic>
+			<if name="kslb" test="notNull">
+				and k.kslb=:kslb
+			</if>
+		</dynamic>
+		<dynamic>
+			GROUP BY K.KSNM,K.KSMC
+			ORDER BY KSNM ) x
+		</dynamic>
+	</sql>
+	
+	<sql id="query_exportExcel">
+		SELECT DISTINCT XMBM id, XMMC text FROM hpkj_kjxmzd t order by id
+	</sql>
+</sqls>

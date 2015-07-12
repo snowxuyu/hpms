@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="hpxc_xcksjs">
+	
+	<sql id="charts">
+		<dynamic>
+			select j.lsh,
+		       j.ksnm,
+		       k.ksmc,
+		       j.nd,
+		       j.yd,
+		       j.dj,
+		       j.cl,
+		       j.pjxs,
+		       j.myd,
+		       j.zxjj,
+		       j.qypjjj,
+		       (j.ycgzl + j.ecgzl) as bhgzl,
+		       j.fpjj
+		  from HPXC_XCKSJS j
+		  left join HPXT_KSZCXX k
+		    on j.ksnm = k.ksnm where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="ksnm" test="notNull">
+				and j.ksnm =:ksnm
+			</if>
+			<if name="nd1" test="notNull">
+        		and ((j.nd = :nd1 
+			</if>
+			<if name="yd1" test="notNull">
+        		and j.yd &lt;= :yd1) or 
+			</if>
+			<if name="nd2" test="notNull">
+        		(j.nd = :nd2
+			</if>
+			<if name="yd2" test="notNull">
+        		and j.yd &gt; :yd2))
+			</if>
+		</dynamic>
+		<dynamic>
+			order by j.nd, j.yd
+		</dynamic>
+	</sql>	
+	
+	<sql id="find">
+		<dynamic>
+			select j.lsh,
+			j.ksnm,
+			k.ksmc,
+			j.nd,
+			j.yd,
+			j.dj,
+			j.cl,
+			j.pjxs,
+			j.myd,
+			j.zxjj kszxjj,
+			c.grzxjj,
+			j.qypjjj,
+			(j.ycgzl + j.ecgzl) as bhgzl,
+			j.fpjj
+			from HPXC_XCKSJS j
+			left join HPXT_KSZCXX k
+			on j.ksnm = k.ksnm
+			left join (
+				select a.ksnm,a.nd,a.yd,sum(zx2+zx3+zx4+zx5+zx6+zx7+zx8+zx9+zx10+zx11+zx12+zx13+zx14) grzxjj from HPZX_GRZXJC  a
+	           left join HPXC_XCKSJS b
+	           on a.ksnm = b.ksnm
+	           and a.nd = b.nd
+	           and a.yd = b.yd
+	           group by a.ksnm,a.nd,a.yd
+	        ) c
+			on j.ksnm = c.ksnm
+		      and j.nd = c.nd
+		      and j.yd = c.yd
+		      where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and j.nd =:nd
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="yd" test="notNull">
+				and j.yd =:yd
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="ksnm" test="notNull">
+				and j.ksnm =:ksnm
+			</if>
+		</dynamic>
+		<dynamic>
+			order by k.kslb, k.fjbm
+		</dynamic>
+	</sql>	
+	
+	<sql id="findAll">
+		<dynamic>
+			select j.lsh,
+			j.ksnm,
+			k.ksmc,
+			j.nd,
+			j.yd,
+			j.dj,
+			j.cl,
+			j.pjxs,
+			j.myd,
+			j.zxjj kszxjj,
+			c.grzxjj,
+			j.qypjjj,
+			(j.ycgzl + j.ecgzl) as bhgzl,
+			j.fpjj
+			from HPXC_XCKSJS j
+			left join HPXT_KSZCXX k
+			on j.ksnm = k.ksnm
+			left join (
+				select a.ksnm,a.nd,a.yd,sum(zx2+zx3+zx4+zx5+zx6+zx7+zx8+zx9+zx10+zx11+zx12+zx13+zx14) grzxjj from HPZX_GRZXJC  a
+	        	left join HPXC_XCKSJS b
+	           on a.ksnm = b.ksnm
+	           and a.nd = b.nd
+	           and a.yd = b.yd
+	           group by a.ksnm,a.nd,a.yd
+			) c
+			on j.ksnm = c.ksnm
+			and j.nd = c.nd
+		    and j.yd = c.yd
+			where 1 = 1
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and j.nd =:nd
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="yd" test="notNull">
+				and j.yd =:yd
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="ksnm" test="notNull">
+				and j.ksnm =:ksnm
+			</if>
+		</dynamic>
+		<dynamic>
+			order by k.kslb, k.fjbm
+		</dynamic>
+	</sql>	
+	
+	<sql id="findAll_count">
+		<dynamic>
+		select sum(j.cl) p1, sum(c.grzxjj) p2, sum(j.zxjj) p3, sum((j.ycgzl + j.ecgzl)) p4, sum(j.fpjj) p5
+		from HPXC_XCKSJS j
+		left join HPXT_KSZCXX k
+		  on j.ksnm = k.ksnm
+		left join (
+		select a.ksnm,a.nd,a.yd,sum(zx2+zx3+zx4+zx5+zx6+zx7+zx8+zx9+zx10+zx11+zx12+zx13+zx14) grzxjj from HPZX_GRZXJC  a
+	        	left join HPXC_XCKSJS b
+	           on a.ksnm = b.ksnm
+	           and a.nd = b.nd
+	           and a.yd = b.yd
+	           group by a.ksnm,a.nd,a.yd
+		) c
+		  on j.ksnm = c.ksnm
+		   and j.nd = c.nd
+		    and j.yd = c.yd
+		where 1 = 1
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and j.nd =:nd
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="yd" test="notNull">
+				and j.yd =:yd
+			</if>
+		</dynamic>
+	</sql>
+	
+</sqls>

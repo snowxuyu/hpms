@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="PBCS_KSBBMX">
+
+	<sql id="query">
+		select
+		LSH,t1.BBBM,SYLSH,SJXS,BFJE,CJR,CJSJ,XGR,XGSJ,ZT,t2.BBMC,t2.BBJX from
+		PBCS_KSBBMX t1
+		inner join HPCS_BBFLK t2 on t1.bbbm=t2.bbbm
+		where 1=1
+		<dynamic>
+			<if name="sylsh" test="notNull">
+				and t1.sylsh = :sylsh
+			</if>
+		</dynamic>
+	</sql>
+</sqls>

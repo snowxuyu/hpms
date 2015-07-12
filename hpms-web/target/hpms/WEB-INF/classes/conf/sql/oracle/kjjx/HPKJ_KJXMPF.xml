@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="kjpf">
+
+	<sql id="queryAll">
+		<dynamic>
+			select t1.SMBM,
+			t1.SMBH,
+			t1.KJBM,
+			t2.JBBM,
+			t2.JBMC,
+			t2.XMBM,
+			t2.XMMC,
+			T2.LBBM,
+			T2.LBMC,
+			t1.SMMC,
+			t1.XZRS,
+			t1.FZ,
+			t1.REMARK,
+			t1.CREATOR,
+			t1.CREATEAT,
+			t1.MODIFOR,
+			t1.MODIFYAT,
+			t1.STATUS
+			from HPKJ_KJXMPF t1
+			inner
+			join HPKJ_KJXMZD t2 on t1.kjbm=t2.kjbm
+			where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="smbm" test="notNull">
+				and smbm = :smbm
+			</if>
+		</dynamic>
+		<dynamic>
+		order by t2.xmbm,t2.lbbm,t2.jbbm,t1.smbm
+		</dynamic>
+	</sql>
+</sqls>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="hpcs_hxxmpz">
+	
+	<!-- 查询重复的核心项目 -->
+	<sql id="queryCf">
+		select * from HPCS_HXXMPZ where 1=1
+		<dynamic>
+			<if name="ksnm" test="notNull">
+				and ksnm = :ksnm
+			</if>
+			<if name="xmbm" test="notNull">
+				and xmbm = :xmbm
+			</if>
+		</dynamic>
+	</sql>
+	
+	<!-- 查询项目分类 -->
+	<sql id="queryxmfl">
+		select distinct xmlbbm id,(SELECT Z.XMLBMC FROM HPCS_XMLBDZ Z WHERE Z.XMLBBM = D.Xmlbbm) text  FROM HPCS_HXXMZD D
+	</sql>
+	
+	<sql id="queryAll">
+		<dynamic>
+			select * from HPCS_HXXMZD
+		</dynamic>
+	</sql>
+	
+	<sql id="queryxmbm">
+		<dynamic>
+			select xmbm from HPCS_HXXMZD
+		</dynamic>
+	</sql>
+	
+	<sql id="queryhxxmpz">
+		<dynamic>
+			select * from HPCS_HXXMPZ
+		</dynamic>
+	</sql>
+	
+	<!-- 科室核心项目配置的查询 -->
+	<sql id="query_hxxm">
+		<dynamic>
+		<!-- 
+			select pz.ksnm,
+			       ks.ksmc,
+			       zd.hxlbbm,
+			       dz.xmlbbm,
+			       dz.xmlbmc,
+			       zd.xmlx,
+			       pz.xmbm,
+			       zd.xmmc,
+			       pz.dsjsa,
+			       pz.dsdeb
+			  from hpcs_hxxmpz pz
+			  left join bpxt_kszcxx ks
+			    on pz.ksnm = ks.ksnm
+			  left join hpcs_hxxmzd zd
+			    on pz.xmbm = zd.xmbm
+			  left join hpcs_xmlbdz dz
+			    on dz.xmlbbm = zd.xmlbbm
+			 where 1 = 1
+			  -->
+			  select * from  V_YKSHXXM v where 1=1
+    	</dynamic>
+    	<dynamic>
+			<if name="ksnm" test="notNull">
+				and v.ksnm = :ksnm
+			</if>
+			<if name="hxlbbm" test="notNull">
+				and v.hxlbbm = :hxlbbm
+			</if>
+			<if name="xmlbbm" test="notNull">
+				and v.xmlbbm = :xmlbbm
+			</if>
+			<if name="xmmc" test="notNull">
+				and v.xmmc like '%' ||:xmmc|| '%'
+			</if>
+			order by v.ksmc, v.xmmc, v.hxlbmc
+		</dynamic>
+	</sql>
+	
+	<!-- 科室核心项目名称模糊查询 -->
+	<sql id="mh_query_hxxmmc">
+		<dynamic>
+			select * from V_GHXXMZD v where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="xmmc" test="notNull">
+				and v.xmmc like '%' ||:xmmc|| '%'
+			</if>
+		</dynamic>
+	</sql>
+	
+	<!-- 用于新增点击查询的时候的模糊查询核心项目字典 -->
+	<sql id="query_hxxmzd">
+		<dynamic>
+			select zd.hxlbbm,
+			       zd.xmlbbm,
+			       dz.xmlbmc,
+			       zd.xmlx,
+			       zd.xmbm,
+			       zd.xmmc,
+			       zd.dsjsa,
+			       zd.dsdeb
+			  from HPCS_HXXMZD zd
+			  left join HPCS_XMLBDZ dz
+			    on zd.hxlbbm = dz.xmlbbm where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="xmmc" test="notNull">
+				and zd.xmmc = :xmmc
+			</if>
+		</dynamic>
+	</sql>
+	
+	<!-- 级联查询  查询项目类别 -->
+	<sql id="query_xmlb">
+		select dz.xmlbbm id, dz.xmlbmc text  from HPCS_XMLBDZ dz where 1=1
+		<dynamic>
+			<if name="fjbm" test="notNull">
+				and dz.fjbm = :fjbm
+			</if>
+		</dynamic>
+	</sql>
+	
+	<!-- 查询所有项目类别  -->
+	<sql id="query_allxmlb">
+		select  dz.xmlbbm id, dz.xmlbmc text from HPCS_XMLBDZ dz where dz.fjbm is not null
+	</sql>
+	
+	<!-- 查询核心类别 -->
+	<sql id="query_hxlb">
+		select dz.xmlbbm id, dz.xmlbmc text  from HPCS_XMLBDZ dz where dz.fjbm is null
+	</sql>
+	
+	<!-- 查询项目标识 -->
+	<sql id="query_xmbs">
+		select distinct xmbs id, xmbsmc text from V_YKSHXXM 
+	</sql>
+</sqls>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="HPCS_SFYSCC">
+	<sql id="queryAll">
+		<dynamic>
+			select
+			LSH,YBM,YMC,ND,YD,SJZ,YLD,YDXBM,YDXMC,CJR,CJSJ,XGR,XGSJ,ZT
+			from
+			HPCS_SFYSCC where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="time" test="notNull">
+				and
+				to_date(nd||'-'||yd,'yyyy-mm')=to_date(:time,'yyyy-mm')
+			</if>
+			<if name="ymc" test="notNull">
+				and ( ymc like '%'||:ymc||'%' 
+			</if>
+			<if name="ymc" test="notNull">
+				or ybm like
+				'%'||:ymc||'%')
+			</if>
+			<if name="ydx" test="notNull">
+				and ( ydxbm like '%'||:ydx||'%'
+			</if>
+			<if name="ydx" test="notNull">
+				 or ydxmc like
+				'%'||:ydx||'%')
+			</if>
+		</dynamic>
+	</sql>
+</sqls>

@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="qmys_query">
+	
+	<!-- 根据年月查询标化工作量 -->
+	<sql id="query_nd">
+		<dynamic>
+			select v.kslb kslb, v.kslbmc||decode(v.sfbf,'1','(有病房)','') kslbmc, v.ksnm ksbh, v.fjmc yjks, v.ksmc ejks, v.sfbf sfbf, nvl(ycgzl, 0) ycfp, nvl(ecgzl, 0) ecfp, nvl(ycgzl + ecgzl, 0) hj,
+			nvl(fpjj, 0) fpjj from v_gksjbxx v left join hpxc_xcksjs k on (v.ksnm = k.ksnm
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and nd = :nd
+			</if>
+			<if name="yd" test="notNull">
+				and yd = :yd
+			</if>
+		</dynamic>
+		<dynamic>
+			)
+		</dynamic>
+		<dynamic>
+			<if name="ksnm" test="notNull">
+				where v.ksnm = :ksnm
+			</if>
+		</dynamic>
+		<dynamic>
+			order by v.kslb, v.kslbmc || decode(v.sfbf, '1', '(有病房)', ''), v.fjmc, v.ksmc
+		</dynamic>
+	</sql>
+	
+	<!-- 根据年月查询标化工作量 -->
+	<sql id="query_nd_count">
+		<dynamic>
+			select sum(nvl(ycgzl + ecgzl, 0)) p1, sum(nvl(fpjj, 0)) p2 from v_gksjbxx v left join hpxc_xcksjs k on (v.ksnm = k.ksnm
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and nd = :nd
+			</if>
+			<if name="yd" test="notNull">
+				and yd = :yd
+			</if>
+		</dynamic>
+		<dynamic>
+			)
+		</dynamic>
+	</sql>
+	
+	<!-- 根据科室和分配原则查找 -->
+	<sql id="query_fp">
+		<dynamic>
+			SELECT a.xmlbbm xmlbdm, x.xmlbmc xmlbmc, a.sl sl, a.bhl bhgzl, round(a.bhl / sum(a.bhl)over()*100, 2) zb
+			FROM (SELECT k.xmlbbm, k.xmlbmc, SUM(k.sl) sl, SUM(k.bhl) bhl, SUM(k.bhl) hj FROM HPBH_BHKSMX k
+			where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+			and k.nd = :nd
+			</if>
+			<if name="yd" test="notNull">
+			and k.yd = :yd
+			</if>
+			<if name="ksnm" test="notNull">
+			and k.ksnm = :ksnm
+			</if>
+			<if name="fpyz" test="notNull">
+			and k.fpcs = :fpyz
+			</if>
+		</dynamic>
+		<dynamic>
+	group by k.xmlbbm, k.xmlbmc) a
+	left join hpcs_xmlbdz x on (a.xmlbbm = x.xmlbbm)
+	order by a.xmlbbm
+		</dynamic>
+	</sql>
+	
+	<sql id="query_fp_count">
+		<dynamic>
+			select sum(sl) p1,sum(bhl) p2 from HPBH_BHKSMX where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+			and nd = :nd
+			</if>
+			<if name="yd" test="notNull">
+			and yd = :yd
+			</if>
+			<if name="ksnm" test="notNull">
+			and ksnm = :ksnm
+			</if>
+			<if name="fpyz" test="notNull">
+			and fpcs = :fpyz
+			</if>
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 根据项目类别查找 -->
+	<sql id="query_lb">
+		<dynamic>
+			SELECT k.XMBM xmdm, k.XMMC xmmc, sum(DSDEB) rbrvs, sum(k.sl) sl, sum(k.bhl) bhgzl
+			FROM HPBH_BHKSMX k
+			WHERE 1=1
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and k.nd = :nd
+			</if>
+			<if name="yd" test="notNull">
+				and k.yd = :yd
+			</if>
+			<if name="ksnm" test="notNull">
+				and k.ksnm = :ksnm
+			</if>
+			<if name="fpyz" test="notNull">
+				and k.fpcs = :fpyz
+			</if>
+			<if name="xmlbdm" test="notNull">
+				and k.xmlbbm = :xmlbdm
+			</if>
+		</dynamic>
+		<dynamic>
+			group by k.XMBM, k.XMMC
+			order by k.xmbm, k.xmmc
+		</dynamic>
+	</sql>
+	
+	<sql id="query_lb_count">
+		<dynamic>
+			select sum(a.sl) p1, sum(a.bhl) p2 from HPBH_BHKSMX a
+			where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and a.nd = :nd
+			</if>
+			<if name="yd" test="notNull">
+				and a.yd = :yd
+			</if>
+			<if name="ksnm" test="notNull">
+				and a.ksnm = :ksnm
+			</if>
+			<if name="fpyz" test="notNull">
+				and a.fpcs = :fpyz
+			</if>
+			<if name="xmlbdm" test="notNull">
+				and a.xmlbbm = :xmlbdm
+			</if>
+		</dynamic>
+	</sql>
+	
+	<!-- 根据项目类别查找 -->
+	<sql id="query_lbxm">
+		<dynamic>
+			SELECT k.XMBM xmdm, k.XMMC xmmc, k.dsdeb rbrvs, k.sl, k.bhl bhgzl
+			FROM HPBH_BHGRMX k
+			WHERE 1=1
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and k.nd = :nd
+			</if>
+			<if name="yd" test="notNull">
+				and k.yd = :yd
+			</if>
+			<if name="ksnm" test="notNull">
+				and k.ksnm = :ksnm
+			</if>
+			<if name="fpyz" test="notNull">
+				and k.fpcs = :fpyz
+			</if>
+			<if name="xmlbdm" test="notNull">
+				and k.xmlbbm = :xmlbdm
+			</if>
+			<if name="ygbh" test="notNull">
+				and k.ygbh = :ygbh
+			</if>
+		</dynamic>
+		<dynamic>
+			order by k.xmbm, k.xmmc
+		</dynamic>
+	</sql>
+	
+	<sql id="query_lbxm_count">
+		<dynamic>
+			select sum(k.sl) p1, sum(k.bhl) p2 from HPBH_BHGRMX k
+			where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and k.nd = :nd
+			</if>
+			<if name="yd" test="notNull">
+				and k.yd = :yd
+			</if>
+			<if name="ksnm" test="notNull">
+				and k.ksnm = :ksnm
+			</if>
+			<if name="fpyz" test="notNull">
+				and k.fpcs = :fpyz
+			</if>
+			<if name="xmlbdm" test="notNull">
+				and k.xmlbbm = :xmlbdm
+			</if>
+			<if name="ygbh" test="notNull">
+				and k.ygbh = :ygbh
+			</if>
+		</dynamic>
+	</sql>
+	
+	<!-- 根据项目类别查找 -->
+	<sql id="query_lb_gr">
+		<dynamic>
+			select a.ygbh, b.ygxm, sum(a.bhl) grbhgz from HPBH_BHGRMX a, HPXT_YGZCXX b
+			where a.ksnm = b.ksnm and a.ygbh = b.ygbh
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and a.nd = :nd
+			</if>
+			<if name="yd" test="notNull">
+				and a.yd = :yd
+			</if>
+			<if name="ksnm" test="notNull">
+				and a.ksnm = :ksnm
+			</if>
+			<if name="xmlbdm" test="notNull">
+				and a.xmlbbm = :xmlbdm
+			</if>
+		</dynamic>
+		<dynamic>
+			group by a.ygbh, b.ygxm
+			order by b.ygxm
+		</dynamic>
+	</sql>
+	
+	<!-- 根据项目类别查找 -->
+	<sql id="query_lb_gr_count">
+		<dynamic>
+			select sum(a.bhl) p1 from HPBH_BHGRMX a
+			where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and a.nd = :nd
+			</if>
+			<if name="yd" test="notNull">
+				and a.yd = :yd
+			</if>
+			<if name="ksnm" test="notNull">
+				and a.ksnm = :ksnm
+			</if>
+			<if name="xmlbdm" test="notNull">
+				and a.xmlbbm = :xmlbdm
+			</if>
+		</dynamic>
+	</sql>
+	
+	<!-- 根据科室查找 -->
+	<sql id="query_lb_ksgr">
+		<dynamic>
+			select b.xmlbbm xmlbdm, b.xmlbmc, b.sl, b.grbhgz bhgzl, round(b.grbhgz / sum(b.grbhgz)over()*100, 2) zb  from (
+				select a.xmlbbm, a.xmlbmc, sum(a.sl) sl, sum(a.bhl) grbhgz from HPBH_BHGRMX a where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and a.nd =:nd
+			</if>
+			<if name="yd" test="notNull">
+				and a.yd =:yd
+			</if>
+			<if name="ksnm" test="notNull">
+				and a.ksnm =:ksnm
+			</if>
+			<if name="ygbh" test="notNull">
+				and a.ygbh =:ygbh
+			</if>
+		</dynamic>
+		<dynamic>
+			group by a.xmlbbm, a.xmlbmc ) b order by b.xmlbbm
+		</dynamic>
+	</sql>
+	
+	<!-- 统计 -->
+	<sql id="query_lb_ksgr_count">
+		<dynamic>
+			select sum(a.sl) p1, sum(a.bhl) p2 from HPBH_BHGRMX a where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and a.nd =:nd
+			</if>
+			<if name="yd" test="notNull">
+				and a.yd =:yd
+			</if>
+			<if name="ksnm" test="notNull">
+				and a.ksnm =:ksnm
+			</if>
+			<if name="ygbh" test="notNull">
+				and a.ygbh =:ygbh
+			</if>
+		</dynamic>
+	</sql>	
+	
+	<!-- 根据科室查找 -->
+	<sql id="query_sr">
+		<dynamic>
+			select a.ksnm p1, a.ksmc p2, a.xmbm p3, a.xmmc p4, sum(a.sl*b.dj) p5, sum(a.dsdeb) p6, sum(a.sl) p7 from HPBH_BHKSMX a
+			left join HPCS_HXXMZD b
+			on a.xmbm = b.xmbm where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="ksnm" test="notNull">
+				and a.ksnm = :ksnm
+			</if>
+		</dynamic>
+		<dynamic>
+			and (
+				(
+		</dynamic>
+		<dynamic>
+			<if name="nds1" test="notNull">
+				a.nd &gt; :nds1 and 
+			</if>
+			<if name="nde1" test="notNull">
+				a.nd &lt; :nde1) or
+			</if>
+			<if name="nds2" test="notNull">
+				(a.nd = :nds2 and 
+			</if>
+			<if name="yds1" test="notNull">
+				a.yd &gt;= :yds1) or
+			</if>
+			<if name="nde2" test="notNull">
+				(a.nd = :nde2 and 
+			</if>
+			<if name="yde1" test="notNull">
+				a.yd &lt;= :yde1)
+			</if>
+		</dynamic>
+		<dynamic>
+			)
+		</dynamic>
+		<dynamic>
+			group by a.ksnm, a.ksmc, a.xmbm, a.xmmc
+			order by a.ksnm, a.xmmc
+		</dynamic>
+	</sql>
+	
+</sqls>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="PBCS_ZGRYTJVO">
+
+	<sql id="query">
+		<dynamic>
+			select '1' as ksnm,'1' as ksmc,'1' as bzs,'1' as zgrs,'1' as
+			yd,'1' as nd from dual where 1=1
+		</dynamic>
+		 <dynamic>
+		 	<if name="startTime" test="notNull">
+		 		 and 1=1
+		 	</if>
+		 	<if name="endTime" test="notNull">
+		 		 and 1=1
+		 	</if>
+		 </dynamic>
+	</sql>
+	<sql id="sumQuery">
+		<dynamic>
+			select '2' bzs,'2' as zgrs,'2' from dual where 1=1
+		</dynamic>
+		<dynamic>
+		 	<if name="startTime" test="notNull">
+		 		 and 1=1
+		 	</if>
+		 	<if name="endTime" test="notNull">
+		 		 and 1=1
+		 	</if>
+		 </dynamic>
+	</sql>
+</sqls>

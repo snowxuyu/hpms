@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="hpcs_xmlbdz">
+	
+	<sql id="query_fjbm">
+		<dynamic>
+			select t.* from HPCS_XMLBDZ t where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="fjbm" test="notNull">
+				and t.fjbm = :fjbm
+			</if>
+		</dynamic>
+	</sql>
+	
+	<sql id="query_fj">
+		select t.xmlbbm id, t.xmlbmc text from HPCS_XMLBDZ t where t.fjbm is null
+	</sql>
+	
+	<sql id="query_xmlbmc">
+		<dynamic>
+			select t.xmlbbm xmlbbm, t.xmlbmc xmlbmc, m.xmlbbm fjbm, m.xmlbmc fjmc, t.bzxx bzxx from hpcs_xmlbdz t
+			left join hpcs_xmlbdz m
+			on t.fjbm = m.xmlbbm
+		</dynamic>
+		<dynamic>
+			<if name="xmlbmc" test="notNull">
+				where t.xmlbmc like  '%'||:xmlbmc||'%'
+			</if>
+		</dynamic>
+		<dynamic>
+			order by t.fjbm, t.xmlbbm
+		</dynamic>
+	</sql>
+	
+	<sql id="query_tree">
+		<dynamic>
+			select * from hpcs_xmlbdz t
+		</dynamic>
+		<dynamic>
+			<if name="fjbm" test="notNull">
+				start with t.fjbm = :fjbm connect by prior xmlbbm = t.fjbm
+			</if>
+		</dynamic>
+	</sql>
+	
+	<sql id="query_id_pid">
+		<dynamic>
+			<if name="xmlbbm1" test="notNull">
+				select * from HPCS_XMLBDZ t where xmlbbm = :xmlbbm1
+			</if>
+			<if name="xmlbbm2" test="notNull">
+				or fjbm = :xmlbbm2
+			</if>
+		</dynamic>
+	</sql>
+</sqls>

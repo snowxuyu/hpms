@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="hpxt_kszcxx">
+
+	<sql id="query_combobox">
+		select t.ksnm id, t.ksmc text from hpxt_kszcxx t where
+		t.jb='2' order by t.ksnm
+	</sql>
+
+	<sql id="query_combobox_2">
+		select t.ksnm id, t.ksmc text from hpxt_kszcxx t where
+		t.jb='2'
+	</sql>
+
+	<sql id="query_combobox_2">
+		select t.ksnm id, t.ksmc text from hpxt_kszcxx t where
+		t.jb='2'
+	</sql>
+	<sql id="queryJb2">
+		select
+		t.KSNM,t.YYBM,t.KSMC,t.KSJC,t.FJBM,t.JB,t.PX,t.KSLB,t.MZLB,t.SFBF,t.SFSS,t.SFHL,t.HSBZ,t.KSPPBM,t.KSPPMC,t.BQPPBM,t.BQPPMC,t.KSZT,t.CJR,t.CJSJ,t.XGR,t.XGSJ,t.ZT
+		from hpxt_kszcxx t where t.jb='2'
+	</sql>
+	<sql id="query">
+		select
+		t1.KSNM,YYBM,KSMC,KSJC,nvl(FJBM,0) as FJBM,JB,PX,KSLB,MZLB,SFBF,SFSS,SFHL,HSBZ,KSPPBM,KSPPMC,BQPPBM,BQPPMC,KSZT,t1.CJR,t1.CJSJ,t1.XGR,t1.XGSJ,t1.ZT,t2.SYLSH
+		from HPXT_KSZCXX t1
+		left join PBCS_KSSYMX t2 on t1.ksnm=t2.ksnm
+		<dynamic>
+			<if name="sylsh" test="notNull">
+				and sylsh=:sylsh
+			</if>
+		</dynamic>
+	</sql>
+</sqls>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="hpcs_qypjjj">
+	
+	<sql id="query_qypjjj">
+		select H.LSH,H.KSNM,H.ND,H.YD,ROUND(H.KSPJJ,2) KSPJJ,B.KSMC KSMC 
+		from HPCS_QYPJJJ H,HPXT_KSZCXX B where 1=1 and H.Ksnm=B.KSNM 
+        <dynamic>
+          <if name="nd" test="notNull">
+				and ND = :nd 
+			</if>
+			<if name="yd" test="notNull">
+				and YD = :yd
+			</if>
+        </dynamic>
+        <dynamic>
+        order  by H.ND desc,H.YD desc,H.KSNM
+        </dynamic>
+	</sql>
+	
+</sqls>

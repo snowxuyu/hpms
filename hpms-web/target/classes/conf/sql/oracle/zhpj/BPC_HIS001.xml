@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="bpc_his001">
+	
+	
+	<sql id="queryHis">
+		<dynamic>
+			select h.bh, h.nd, h.yd, h.xmbm, h.xmmc, h.dxbm, h.dxmc, h.sjz from bpc_his001 h where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and h.nd =:nd
+			</if>
+			<if name="yd" test="notNull">
+				and h.yd =:yd
+			</if>
+			<if name="dxmc" test="notNull">
+				and h.dxmc like '%' ||:dxmc|| '%'
+			</if>
+			<if name="xmmc" test="notNull">
+				and h.xmmc like '%' ||:xmmc|| '%'
+			</if>
+		</dynamic>
+		<dynamic>
+			order by h.nd desc, h.yd desc, h.dxbm asc, h.xmbm asc
+		</dynamic>
+	</sql>
+	
+</sqls>

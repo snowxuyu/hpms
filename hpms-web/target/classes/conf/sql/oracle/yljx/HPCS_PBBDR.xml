@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="hpcs_pbbdr">
+	
+	<sql id="query_ksmc_ygmc">
+		<dynamic>
+			select t.nd nd, t.yd yd, t.ksmc ksmc, t.bbmc bbmc,t.ygmc ygmc, sum(t.bbcs) bbsl from HPCS_PBBDR t
+			where 1 = 1
+		</dynamic>
+		<dynamic>
+			<if name="ksmc" test="notNull">
+				and t.ksmc like '%'||:ksmc||'%'
+			</if>
+			<if name="ygmc" test="notNull">
+				and t.ygmc like '%'||:ygmc||'%'
+			</if>
+		</dynamic>
+		<dynamic>
+			group by t.nd, t.yd, t.ksmc, t.bbmc,t.ygmc
+			order by t.nd, t.yd, t.ksmc, t.bbmc
+		</dynamic>
+	</sql>
+	
+</sqls>

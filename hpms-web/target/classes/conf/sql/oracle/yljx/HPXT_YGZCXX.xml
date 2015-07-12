@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="hpxt_ygzcxx">
+	
+	<sql id="query_q">
+		<dynamic>
+			select * from hpxt_ygzcxx t
+		</dynamic>
+		<dynamic>
+			<if name="q" test="notNull">
+				where t.ygxm like '%'||:q||'%'
+			</if>
+		</dynamic>
+	</sql>
+	
+	<sql id="query_all">
+		select a.ygbh ygbh, a.ygxm ygxm, a.ksnm, b.ksmc from hpxt_ygzcxx a
+	    left join hpxt_kszcxx b
+	    on a.ksnm = b.ksnm
+	</sql>
+</sqls>

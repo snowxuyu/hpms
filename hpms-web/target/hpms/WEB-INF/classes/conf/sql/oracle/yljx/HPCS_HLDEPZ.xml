@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="hpcs_hldepz">
+	
+	<sql id="query_hldepz">
+		select H.LSH,H.KSNM,B.KSMC KSMC,HLSSDE,HLXSDE,HLDSDE,HLHDRY 
+		from HPCS_HLDEPZ H,HPXT_KSZCXX B
+        where 1=1 and H.KSNM=B.KSNM
+        <dynamic>
+          <if name="ksnm" test="notNull">
+			  	and H.KSNM=:ksnm
+		  </if>
+        </dynamic>
+	</sql>
+	
+</sqls>

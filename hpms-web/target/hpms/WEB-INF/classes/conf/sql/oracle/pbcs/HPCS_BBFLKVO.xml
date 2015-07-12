@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="HPCS_BBFLKVO">
+		
+	<sql id="queryList">
+		select HC.ZDBM id , HC.ZDMC text  from HPXT_ZDDMZC HC
+		inner join HPXT_ZDFLZC HZ ON HZ.FLBM = HC.FLBM AND HZ.FLBM='HPMS.1017'
+	</sql>
+	
+	<sql id="queryAll">
+		<dynamic>
+			SELECT * FROM HPCS_BBFLK
+			WHERE 1=1
+		</dynamic>
+		<dynamic>
+			<if name="bbnm" test="notNull">
+				AND BBFL =:bbnm
+			</if>
+		</dynamic>
+	</sql>
+	
+	<sql id="queryExist">
+		<dynamic>
+			SELECT DISTINCT HB.BBBM FROM HPCS_BBFLK HB
+			INNER JOIN HPBH_BHGRJS HH ON HB.BBBM = HH.BBBM
+			INNER JOIN HPCS_BBDZDZ HD ON HB.BBBM = HD.BBBM
+			INNER JOIN HPCS_PBBDR HP ON HB.BBBM = HP.BBBM
+			INNER JOIN PBCS_KSBBMX PK ON HB.BBBM = PK.BBBM
+			INNER JOIN PBCS_KSPBMX PS ON HB.BBBM = PS.BBBM
+			WHERE 1=1
+		</dynamic>
+		<dynamic>
+			<if name="bbbm" test="notNull">
+				AND HB.BBBM =:bbbm 
+			</if>
+		</dynamic>
+	</sql>
+</sqls>

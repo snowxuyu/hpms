@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="HPYS_RLCBYS">
+	
+	<sql id="query_not_fj">
+		select * from HPYS_RLCBYS where fjbm is null 
+		<dynamic>
+			<if name="nd1" test="notNull">
+				and nd = :nd1
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="nd2" test="notNull">
+				and xmbm not in(select distinct fjbm from HPYS_RLCBYS where fjbm is not null and nd = :nd2)
+			</if>
+		</dynamic>
+	</sql>
+	
+	<sql id="query_one">
+		<dynamic>
+			select y.* from HPYS_RLCBYS y where 1 = 1
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+			and y.nd = :nd
+			</if>
+			<if name="yd" test="notNull">
+			and y.yd = :yd
+			</if>
+			<if name="xmbm" test="notNull">
+			and y.xmbm = :xmbm
+			</if>
+		</dynamic>
+	</sql>
+	
+	<sql id="query_nd_xmbm">
+		<dynamic>
+			select * from HPYS_RLCBYS t where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and nd = :nd
+			</if>
+			<if name="xmbm" test="notNull">
+				and xmbm = :xmbm
+			</if>
+		</dynamic>
+		<dynamic>
+			order by yd
+		</dynamic>
+	</sql>
+	
+	<sql id="query_rlcbys_nd">
+		<dynamic>
+			select y.xmbm xmbm, s.xmmc fjmc, y.xmmc xmmc, t.sjzt sjzt, 
+			sum(decode(y.yd,'1',y.ysz,'')) y1 ,
+			sum(decode(y.yd,'2',y.ysz,'')) y2 ,
+			sum(decode(y.yd,'3',y.ysz,'')) y3 ,
+			sum(decode(y.yd,'4',y.ysz,'')) y4 ,
+			sum(decode(y.yd,'5',y.ysz,'')) y5 ,
+			sum(decode(y.yd,'6',y.ysz,'')) y6 ,
+			sum(decode(y.yd,'7',y.ysz,'')) y7 ,
+			sum(decode(y.yd,'8',y.ysz,'')) y8 ,
+			sum(decode(y.yd,'9',y.ysz,'')) y9 ,
+			sum(decode(y.yd,'10',y.ysz,'')) y10 ,
+			sum(decode(y.yd,'11',y.ysz,'')) y11 ,
+			sum(decode(y.yd,'12',y.ysz,'')) y12
+			from HPYS_RLCBDY t, HPYS_RLCBYS y
+			left join HPYS_RLCBYS s
+			on y.fjbm = s.xmbm and y.nd = s.nd
+			where t.xmbm = y.xmbm
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and y.nd = :nd
+			</if>
+		</dynamic>
+		<dynamic>
+			and y.jb = '2'
+			group by y.yybm, y.xmbm, y.xmmc, s.xmmc, t.sjzt
+			order by  y.xmbm
+		</dynamic>
+	</sql>
+	
+<!--查询年度 -->
+	<sql id="query_bpe_jx001">
+		<dynamic>
+		select distinct jxnd,jxqy from bpe_jx001 where jxnd is not null and jxqy is not null
+		</dynamic>
+		<dynamic>
+			<if name="jxnd" test= "notNull">
+				and jxnd=:jxnd
+			</if>
+		</dynamic>
+		<dynamic>
+			order by jxnd
+		</dynamic>
+	</sql>
+	
+<!--查询项目 -->
+	<sql id="query_hpys_rlcbdy">
+		<dynamic>
+			select decode(
+			(select count(1) from HPYS_RLCBYS b where b.xmbm = a.xmbm
+		</dynamic>
+		<dynamic>
+			<if name="nd" test= "notNull">
+				and b.nd(+)=:nd
+			</if>
+		</dynamic>
+		<dynamic>
+			and (select count(1) from hpys_rlcbdy c where c.fjbm=b.xmbm)=0)
+       		,0,0,1) checked ,
+       		(case when a.fjbm = 'A' then '绩效(考核)' when a.fjbm = 'B' then '绩效(不考核)'
+       		 when a.fjbm = 'C'then '工资及社会保障' when a.fjbm= 'D' then '职工福利' end) fjmc
+       		 ,a.* from hpys_rlcbdy a 
+		</dynamic>
+	</sql>
+	
+	
+	<sql id="query_rlcbdy_rlcbys"  >
+		<dynamic>
+		  select  r.* 
+		  from hpys_rlcbdy r 
+		  where 
+		    (select count(1) from HPYS_RLCBYS rl where
+	    </dynamic>
+    	<dynamic>
+		<if name="year" test= "notNull">
+              nd=:year 
+        </if>      
+        </dynamic>
+        <dynamic>
+        and rl.XMBM = r.XMBM)>0
+        </dynamic>
+       
+	</sql>
+	
+	<sql id="query_rlcbys_zxl">
+	  <dynamic>
+	   SELECT 
+	      r1.ysbm , r1.xmbm, r1.xmmc, r1.nd, r1.yd, r1.ysz, r1.sqzt, r1.shzt,
+	      r2.lsh ,r2.sjz,r2.zxl,
+	      r3.sjzt
+       FROM HPYS_RLCBDY R3 , HPYS_RLCBYS R1,HPYS_RLCBZX R2 
+       WHERE 
+     </dynamic>
+     <dynamic> <if name="id" test= "notNull"> r1.XMBM=:id </if></dynamic>
+     <dynamic>  and r3.XMBM = r1.XMBM  AND </dynamic>
+     <dynamic><if name="year" test= "notNull"> r1.ND=:year </if></dynamic>
+     <dynamic>  and R2.YSBM(+) = R1.YSBM </dynamic>
+      <dynamic>order by R1.px </dynamic>
+	</sql>
+	
+<!-- 	查询项目 -->
+	<sql id="queryByXmbm">
+		<dynamic>
+			select * from HPYS_RLCBDY where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="xmbm" test="notNull">
+				and xmbm = :xmbm
+			</if>
+		</dynamic>
+	</sql>
+	
+	<!-- 	查询项目 -->
+	<sql id="queryByFJBM">
+		<dynamic>
+			select * from HPYS_RLCBYS where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="fjbm" test="notNull">
+				and fjbm = :fjbm
+			</if>
+		</dynamic>
+	</sql>
+	
+	<sql id="querySl">
+		<dynamic>
+			select a.ysbm ,a.ysz,a.nd,b.lsh,b.sjz,b.zxl from hpys_rlcbys a ,hpys_rlcbzx b where a.ysbm = b.ysbm(+) 
+		</dynamic>
+		<dynamic>
+			<if name="year" test="notNull"> 
+				and a.nd =:year 
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="xmbm" test="notNull"> 
+				and a.xmbm =:xmbm
+			</if>
+		</dynamic>
+		<dynamic>order by a.px</dynamic>
+	</sql>
+	
+   <sql id="querySum">
+     <dynamic>SELECT SUM(R1.YSZ) zys , SUM(R2.SJZ) zsj, DECODE(SUM(R1.YSZ) ,0 ,0 , TRUNC(SUM(R2.SJZ)/SUM(R1.YSZ),2) ) zxl
+     FROM HPYS_RLCBYS R1 , HPYS_RLCBZX R2 
+     WHERE R2.YSBM = R1.YSBM</dynamic>
+       <dynamic>
+         <if name="year" test="notNull"> AND  R1.ND=:year</if> 
+       </dynamic>
+   </sql>
+   
+<!--    查询年度总和 -->
+	<sql id="queryNdSum">
+		<dynamic>
+			select sum(a.ysz) yszje ,sum(b.sjz) sjzje ,
+				decode(b.zt,'1','已审核','未审核') ztName, a.nd
+				from hpys_rlcbys a , hpys_rlcbzx b where a.ysbm = b.ysbm 
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and a.nd=:nd
+			</if>
+		</dynamic>
+		<dynamic>
+			   group by b.zt ,a.nd
+		</dynamic>
+	</sql>
+<!-- 查询年度预算总金额 -->
+	<sql id="queryNdYs">
+		<dynamic>
+			select nd,sum(ysz) yszje , decode(zt,1,'审核','未审核') ztName from hpys_rlcbys where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and nd=:nd
+			</if>
+		</dynamic>
+		<dynamic>
+			group by nd ,zt order by nd
+		</dynamic>
+	</sql>
+	
+	<sql id="queryZX">
+		<dynamic>
+			select ysbm from HPYS_RLCBZX where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="ysbm" test="notNull">
+				and ysbm =:ysbm
+			</if>
+		</dynamic>
+	</sql>
+	
+	<sql id="queryByXMBM">
+		<dynamic>
+			select * from hpys_rlcbdy
+		</dynamic>
+		<dynamic>
+			<if name="xmbm" test="notNull">
+				where xmbm = :xmbm
+			</if>
+		</dynamic>
+	</sql>
+</sqls>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="hpcs_gwxsdz">
+	
+	<sql id="query_ksnm">
+		<dynamic>
+			select a.*, b.ksmc ksmc from hpcs_gwxsdz a left join hpxt_kszcxx b on a.ksnm = b.ksnm
+		</dynamic>
+		<dynamic>
+			<if name="ksnm" test="notNull">
+				and a.ksnm=:ksnm
+			</if>
+		</dynamic>
+	</sql>
+	
+</sqls>

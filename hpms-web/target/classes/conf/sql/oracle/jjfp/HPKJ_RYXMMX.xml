@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="ryxmmx">
+
+	<sql id="queryAll">
+		<dynamic>
+			select t1.ygbh,t4.ygxm,t3.xmmc,t3.lbmc,t3.jbmc,t2.smmc,t1.fz from
+			HPKJ_KJGRMX t1
+			left join HPKJ_KJXMPF t2 on t1.smbm=t2.smbm
+			left join HPKJ_KJXMZD t3 on t2.kjbm=t3.kjbm
+			left join HPXT_YGZCXX t4 on t1.ygbh=t4.ygbh where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="ygbh" test="notNull">
+				and t1.ygbh = :ygbh
+			</if>
+		</dynamic>
+	</sql>
+</sqls>

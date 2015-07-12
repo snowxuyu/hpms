@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="ryxmmx">
+
+	<sql id="queryAll">
+		<dynamic>
+			select
+			t3.kjbm,t1.ygbh,t4.xmmc,t4.lbmc,t4.jbmc,t3.smmc,t1.fz,t4.kjbm from
+			HPKJ_KJGRMX t1
+			inner join HPKJ_KJXMMX t2 on t2.xmid=t1.xmid
+			inner join HPKJ_KJXMPF t3 on t1.smbm=t3.smbm
+			inner join HPKJ_KJXMZD t4 on t3.kjbm=t4.kjbm where 1=1
+		</dynamic>
+
+		<dynamic>
+			<if name="startTime" test="notNull">
+				and t2.rhsj &gt;=
+				to_date(:startTime,'yyyy-mm')
+			</if>
+			<if name="endTime" test="notNull">
+				and t2.rhsj &lt;=
+				to_date(:endTime,'yyyy-mm')
+			</if>
+			<if name="ksdm" test="notNull">
+				and t5.zwlb=:ksdm
+			</if>
+			<if name="zc" test="notNull">
+				and t5.zwzc=:zc
+			</if>
+			<if name="ygbh" test="notNull">
+				and t1.ygbh = :ygbh
+			</if>
+		</dynamic>
+	</sql>
+</sqls>

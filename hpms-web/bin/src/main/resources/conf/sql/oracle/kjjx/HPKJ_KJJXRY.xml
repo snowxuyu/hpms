@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="kjjxry">
+
+	<sql id="queryAll">
+		<dynamic>
+			select t1.ygbh,
+			t1.ygxm,
+			t4.kslb,
+			(case
+                 when t5.zwlb = 1 then
+                  '初级'
+                 when t5.zwlb = 2 then
+                  '中级'
+                 when t5.zwlb = 3 then
+                  '高级'
+               end) as zwzc,
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'A' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as "A",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'B' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as
+			"B",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'C' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as "C",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'D' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as
+			"D",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'E' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as "E",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'F' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as
+			"F",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'G' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as "G",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'H' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as
+			"H",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'I' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as
+			"I",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'J' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as
+			"J",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'K' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as "K",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'L' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as
+			"L",
+			sum(t2.fz) as "HJ"
+			from HPXT_YGZCXX t1
+			left join HPXT_RYGXPZ t5
+		    on t1.ygbh=t5.ygbh
+		    and t5.nd=2014 and t5.yd=12
+			left join HPKJ_KJGRMX t2
+			on
+			t1.ygbh = t2.ygbh
+			left join HPKJ_KJXMMX t3
+			on t3.xmid = t2.xmid
+			left
+			join HPXT_KSZCXX t4
+			on
+			t1.ksnm = t4.ksnm
+			where t1.zt='1'
+		</dynamic>
+		<dynamic>
+			<if name="startTime" test="notNull">
+				and t3.rhsj &gt;=
+				to_date(:startTime,'yyyy-mm')
+			</if>
+			<if name="endTime" test="notNull">
+				and t3.rhsj &lt;=
+				to_date(:endTime,'yyyy-mm')
+			</if>
+			<if name="ksdm" test="notNull">
+				and t4.kslb=:ksdm
+			</if>
+			<if name="zc" test="notNull">
+				and t5.zwlb=:zc
+			</if>
+			<if name="ksmc" test="notNull">
+				and t4.ksnm=:ksmc
+			</if>
+		</dynamic>
+		<dynamic>
+			group by t1.ygbh, t1.ygxm, t4.kslb, t5.zwlb
+			order by  case when sum(t2.fz) is null then 0 else sum(t2.fz) end desc
+		</dynamic>
+	</sql>
+
+	<sql id="exporAll">
+		<dynamic>
+			select t1.ygbh,
+			t1.ygxm,
+			t4.kslb,
+			  (case
+                 when t5.zwlb = 1 then
+                  '初级'
+                 when t5.zwlb = 2 then
+                  '中级'
+                 when t5.zwlb = 3 then
+                  '高级'
+               end) zwzc,
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'A' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as "A",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'B' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as
+			"B",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'C' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as "C",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'D' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as
+			"D",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'E' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as "E",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'F' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as
+			"F",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'G' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as "G",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'H' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as
+			"H",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'I' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as
+			"I",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'J' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as
+			"J",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'K' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as "K",
+			rtrim(
+			to_char(
+			sum(case
+			when
+			substr(t2.smbm, 1, 1) = 'L' then
+			t2.fz
+			end),'fm99999999990.99'),'.') as
+			"L",
+			sum(t2.fz) as "HJ"
+			from HPXT_YGZCXX t1
+			left join HPXT_RYGXPZ t5
+		    on t1.ygbh=t5.ygbh
+		    and t5.nd=2014 and t5.yd=12
+			left join HPKJ_KJGRMX t2
+			on
+			t1.ygbh = t2.ygbh
+			left join HPKJ_KJXMMX t3
+			on t3.xmid = t2.xmid
+			left
+			join HPXT_KSZCXX t4
+			on
+			t1.ksnm = t4.ksnm
+			where t1.zt='1'
+		</dynamic>
+		<dynamic>
+			<if name="startTime" test="notNull">
+				and t3.rhsj &gt;=
+				to_date(:startTime,'yyyy-mm')
+			</if>
+			<if name="endTime" test="notNull">
+				and t3.rhsj &lt;=
+				to_date(:endTime,'yyyy-mm')
+			</if>
+			<if name="ksdm" test="notNull">
+				and t4.kslb=:ksdm
+			</if>
+			<if name="zc" test="notNull">
+				and t5.zwlb=:zc
+			</if>
+			<if name="ksmc" test="notNull">
+				and t4.ksnm=:ksmc
+			</if>
+		</dynamic>
+		<dynamic>
+			group by t1.ygbh, t1.ygxm, t4.kslb, t5.zwlb
+			order by  case when sum(t2.fz) is null then 0 else sum(t2.fz) end desc
+		</dynamic>
+	</sql>
+</sqls>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="hpzx_kszxjc">
+	
+	<!-- 科室专项奖惩维护 -->
+	<sql id="findByPage">
+		<dynamic>
+		 select kszx.lsh,
+	        kszx.nd,
+	        kszx.yd,
+	        ks.ksmc,
+	        ks.ksnm,
+	        kszx.zx1,
+	        kszx.zx2,
+	        kszx.zx3,
+	        kszx.zx4,
+	        kszx.zx5,
+	        kszx.zx6,
+	        kszx.zx7,
+	        kszx.zx8,
+	        kszx.zx9,
+	        kszx.zx10,
+	        kszx.zx11,
+	        kszx.zx12,
+	        kszx.zx13,
+	        kszx.zx14,
+	        kszx.zx15,
+	        kszx.zx16,
+	        kszx.zx17,
+	        kszx.zx18,
+	        kszx.zx19,
+	        kszx.zx20,
+	        kszx.zx21
+	   from HPZX_KSZXJC kszx, HPXT_KSZCXX ks
+	  where 1 = 1
+	    and kszx.ksnm = ks.ksnm(+)
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and kszx.nd = :nd
+			</if>
+			<if name="yd" test="notNull">
+				and kszx.yd = :yd
+			</if>
+			<if name="ksnm" test="notNull">
+				and kszx.ksnm = :ksnm
+			</if>
+		</dynamic>
+		<dynamic>
+			order by kszx.nd desc, kszx.yd desc
+		</dynamic>
+	</sql>
+	
+	<!-- 新增 修改  点击选择人员时 查询科室datagrid，根据条件 -->
+	<sql id="find_ksxx">
+		<dynamic>
+			select k2.ksmc fjmc, k1.ksnm, k1.ksmc, k1.kslb
+        		from HPXT_KSZCXX k1,HPXT_KSZCXX k2 where k1.fjbm=k2.ksnm
+		</dynamic>
+		<dynamic>
+			<if name="ksmc" test="notNull">
+				and k1.ksmc like '%' ||:ksmc|| '%'
+			</if>
+		</dynamic>
+	</sql>
+	
+	<!-- 科室专项奖金导出的SQL查询 -->
+	<sql id="queryKsZx">
+		<dynamic>
+			SELECT K1.KSNM FJNM,
+		       K1.KSMC FJMC,
+		       K.KSNM,
+		       K.KSMC,
+		       J.LSH,
+		       J.KSNM,
+		       J.ND,
+		       J.YD,
+		       J.ZX1,
+		       J.ZX2,
+		       J.ZX3,
+		       J.ZX4,
+		       J.ZX5,
+		       J.ZX6,
+		       J.ZX7,
+		       J.ZX8,
+		       J.ZX9,
+		       J.ZX10,
+		       J.ZX11,
+		       J.ZX12,
+		       J.ZX13,
+		       J.ZX14,
+		       J.ZX15,
+		       J.ZX16,
+		       J.ZX17,
+		       J.ZX18,
+		       J.ZX19,
+		       J.ZX20,
+		       J.ZX21
+		  FROM HPXT_KSZCXX K1, HPXT_KSZCXX K
+		  LEFT JOIN HPZX_KSZXJC J
+		    ON K.KSNM = J.KSNM
+		 WHERE K.FJBM = K1.KSNM
+		   AND K.JB = '2'
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				AND J.ND = :nd
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="yd" test="notNull">
+				 AND J.YD = :yd
+			</if>
+		</dynamic>
+		<dynamic>
+			 ORDER BY K.KSNM
+		</dynamic>
+	</sql>
+</sqls>

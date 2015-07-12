@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="PBCS_KSSYMX">
+
+	<sql id="query_ksnms">
+		select wm_concat(ksnm) as p1 from PBCS_KSSYMX where 1=1
+		<dynamic>
+			<if name="sylsh" test="notNull">
+				and sylsh = :sylsh
+			</if>
+		</dynamic>
+	</sql>
+	<sql id="deleteAll">
+		delete from PBCS_KSSYMX where 1=1
+		<dynamic>
+			<if name="sylsh" test="notNull">
+				and sylsh = :sylsh
+			</if>
+		</dynamic>
+	</sql>
+</sqls>

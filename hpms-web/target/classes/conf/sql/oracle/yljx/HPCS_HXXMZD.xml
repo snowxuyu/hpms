@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="hpcs_hxxmzd">
+	
+	<sql id="query_exist">
+		<dynamic>
+			select t.* from HPCS_HXXMZD t where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="xmbm" test="notNull">
+				and t.xmbm=:xmbm
+			</if>
+			<if name="xmmc" test="notNull">
+				and t.xmmc=:xmmc
+			</if>
+			<if name="hxlbbm" test="notNull">
+				and t.hxlbbm=:hxlbbm
+			</if>
+			<if name="xmlbbm" test="notNull">
+				and t.xmlbbm=:xmlbbm
+			</if>
+		</dynamic>
+	</sql>
+	
+	<sql id="query_xmlbbm">
+		<dynamic>
+			select a.*, b.xmlbmc xmlbmc from hpcs_hxxmzd a,hpcs_xmlbdz b where a.xmlbbm = b.xmlbbm
+		</dynamic>
+		<dynamic>
+			<if name="xmlbbm" test="notNull">
+				and a.xmlbbm=:xmlbbm
+			</if>
+		</dynamic>
+	</sql>
+	
+	<sql id="query_xm">
+		<dynamic>
+			select a.*,b.xmlbmc hxlbmc,c.xmlbmc xmlbmc from HPCS_HXXMZD a
+			left join HPCS_XMLBDZ b
+			on a.hxlbbm = b.xmlbbm
+			left join HPCS_XMLBDZ c
+			on c.xmlbbm = a.xmlbbm where 1 = 1
+		</dynamic>
+		<dynamic>
+			<if name="hxlbbm" test="notNull">
+				and a.hxlbbm = :hxlbbm
+			</if>
+			<if name="xmlbbm" test="notNull">
+				and a.xmlbbm = :xmlbbm
+			</if>
+			<if name="xmmc" test="notNull">
+				and a.xmmc like '%'||:xmmc||'%'
+			</if>
+		</dynamic>
+		<dynamic>
+			order by a.xmlbbm, a.xmbm
+		</dynamic>
+	</sql>
+</sqls>

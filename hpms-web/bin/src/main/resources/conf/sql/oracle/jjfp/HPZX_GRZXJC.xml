@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="hpzx_grzxjc">
+	
+	<!-- 个人专项奖惩维护 -->
+	<sql id="findByPage">
+		<dynamic>
+		  select gr.lsh,
+		        gr.nd,
+		        gr.yd,
+		        ks.ksmc,
+		        ks.ksnm,
+		        gr.ygbh,
+		        yg.ygxm,
+		        gr.zx1,
+		        gr.zx2,
+		        gr.zx3,
+		        gr.zx4,
+		        gr.zx5,
+		        gr.zx6,
+		        gr.zx7,
+		        gr.zx8,
+		        gr.zx9,
+		        gr.zx10,
+		        gr.zx11,
+		        gr.zx12,
+		        gr.zx13,
+		        gr.zx14
+		   from HPZX_GRZXJC gr, HPXT_KSZCXX ks, HPXT_YGZCXX yg
+		  where 1 = 1
+		    and gr.ksnm = ks.ksnm(+)
+		    and gr.ygbh = yg.ygbh(+)
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				and gr.nd = :nd
+			</if>
+			<if name="yd" test="notNull">
+				and gr.yd = :yd
+			</if>
+			<if name="ksnm" test="notNull">
+				and gr.ksnm = :ksnm
+			</if>
+			<if name="ygxm" test="notNull">
+				and yg.ygxm like '%' ||:ygxm|| '%'
+			</if>
+		</dynamic>
+		<dynamic>
+			order by nd desc, yd desc
+		</dynamic>
+	</sql>
+	
+	<!-- 查询员工datagrid，根据条件 -->
+	<sql id="find_ygxx">
+		<dynamic>
+			select yg.ygxm, yg.ygbh, yg.ksnm, ks.ksmc, ks.kslb
+			  from HPXT_YGZCXX yg, HPXT_KSZCXX ks
+			 where 1 = 1
+			   and yg.ksnm = ks.ksnm(+)
+		</dynamic>
+		<dynamic>
+			<if name="ygxm" test="notNull">
+				and yg.ygxm like '%' ||:ygxm|| '%'
+			</if>
+		</dynamic>
+	</sql>
+	
+	<sql id="query_yg">
+		select yg.ygbh id, yg.ygxm text from HPXT_YGZCXX yg
+	</sql>
+	
+	<!-- 个人专项奖金导出的SQL查询 -->
+	<sql id="queryKsRy">
+		<dynamic>
+			 SELECT 
+            z.nd,
+            z.yd,
+            k.ksmc,
+            k.ksnm,
+            y.ygbh,
+            y.ygxm,
+            g.zx1,
+            g.zx2,
+            g.zx3,
+            g.zx4,
+            g.zx5,
+            g.zx6,
+            g.zx7,
+            g.zx8,
+            g.zx9,
+            g.zx10,
+            g.zx11,
+            g.zx12,
+            g.zx13,
+            g.zx14
+            FROM HPXT_KSZCXX k,HPXT_YGZCXX y,HPXT_RYGXPZ Z
+        LEFT JOIN HPZX_GRZXJC g ON (z.ksnm=g.ksnm and z.ygbh=g.ygbh and z.nd=g.nd AND z.yd=g.yd )
+        WHERE z.YGBH=Y.YGBH
+        AND z.KSNM=k.ksnm
+		</dynamic>
+		<dynamic>
+			<if name="nd" test="notNull">
+				  AND Z.ND=:nd
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="yd" test="notNull">
+				 AND Z.YD=:yd
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="ksnm" test="notNull">
+				  AND Z.KSNM=:ksnm
+			</if>
+		</dynamic>
+		
+	</sql>
+</sqls>

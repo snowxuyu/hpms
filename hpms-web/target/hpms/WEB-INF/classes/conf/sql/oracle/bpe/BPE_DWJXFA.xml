@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="BPE_DWJXFA">
+
+
+
+	<!-- 单位绩效方案设置 -->
+	<sql id="querybpe_pa003">
+		<dynamic>
+			select pa3.*,org.orgname,sc.jxnd,(case when pa3.fabh is null
+			then '未设置' else '已设置' end)szztname,co.name jxlxname from bpe_pa003
+			pa3,bpe_pa001 p1, V_GORGXX org, BPE_SC001 sc,S103_CODE CO
+			where p1.fabh=pa3.fabh and pa3.jgbm=org.orgCode and sc.jxbh=pa3.jxbh and
+			co.code=pa3.jxlx and co.typeid='PMS.5008' AND pa3.jxlx LIKE 'A%'
+		</dynamic>
+		<dynamic>
+			<if name="jxnd" test="notNull">
+				and sc.jxnd=:jxnd
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="jxdw" test="notNull">
+				and pa3.jgbm=:jxdw
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="famc" test="notNull">
+				and pa3.jxfamc like '%'||:famc||'%'
+			</if>
+		</dynamic>
+		<dynamic>
+			order by sc.jxnd desc,pa3.jgbm
+		</dynamic>
+	</sql>
+
+
+	<!-- 查询绩效年度 -->
+	<sql id="quer_BPE_SC001_JXBH">
+		select jxbh,jxnd from bpe_sc001 where status='1' order by
+		jxnd desc
+	</sql>
+
+
+	<!-- 查询绩效单位 树 -->
+	<sql id="quer_PMR005">
+		select orgname NAME , orgid ID,'ROOT' PID from
+		PMR001_MOR
+		UNION ALL
+		SELECT o.shortname NAME, o.orgcode ID , '310114' PID
+		FROM
+		pmr005_org O
+	</sql>
+
+
+	<!-- 查询绩效单位 -->
+	<sql id="queryOrg">
+		select orgcode,MANAGERORGNAME orgname from PMR005_ORG order
+		by orgcode
+	</sql>
+
+	<!-- 查询单位绩效明细表数据——按单位设置 -->
+	<sql id="queryBPE_PA003_dw">
+		<!-- select p1.fabh,p1.famc, -->
+		<!-- p3.jxfabh,(case nvl(p3.fabh,'0') -->
+		<!-- when '0' then '0' else '1' -->
+		<!-- end)selected from BPE_PA001 p1 -->
+		<!-- left join -->
+		<!-- BPE_PA003 p3 on p3.fabh=p1.fabh and p3.jxlx='A' and p3.jxfabh=? WHERE 
+			p1.syxz='A' order -->
+		<!-- by p1.fabh -->
+		<dynamic>
+			select p1.fabh fabh,p1.famc famc,(case nvl((SELECT COUNT(*)
+			FROM BPE_PA003
+			P3 WHERE P3.FABH=P1.FABH AND P3.JXLX='A01' 
+	    </dynamic>
+		<dynamic>
+			<if name="jgbm" test="notNull">
+				and p3.jgbm=:jgbm
+	    	</if>
+		</dynamic>
+		<dynamic>
+			),'0') when 0 then '0' else '1' end) selected from bpe_pa001
+			p1 where
+			p1.syxz='A'
+	    </dynamic>
+		<dynamic>
+			<if name="synd" test="notNull">
+				and p1.synd=:synd
+	    	</if>
+		</dynamic>
+		<dynamic>
+			order by P1.fabh,P1.famc
+	    </dynamic>
+	</sql>
+
+	<!-- 查询绩效明细表数据 -->
+	<sql id="queryBPE_PA002">
+		SELECT yjzb,yjzbmc,ejzb,ejzbmc,zbbh,zbmc,ZBPX,ZBGSMS FROM (
+		SELECT (SELECT A2.WDMC FROM BPE_AD002 A2 WHERE A2.WDBM=A52.ZBFJ) yjzbmc,A51.ZBFJ ejzb,
+		(SELECT A3.GJYSMC FROM BPE_AD003 A3 WHERE A3.GJYSBM=A51.ZBFJ) ejzbmc,P2.KPIBH zbbh, P2.KPIMC zbmc,T2.ZBPX,A52.ZBFJ yjzb,
+		T2.ZBGSMS FROM BPE_AD005 A51 LEFT JOIN BPE_AD005 A52 ON (A51.MBBH=A52.MBBH AND A51.ZBFJ=A52.ZBBM)
+		INNER JOIN BPE_PA001 P ON P.MBBH=A51.MBBH
+		LEFT JOIN BPE_PA002 P2 ON (P2.FABH=P.FABH AND P2.KPIBH=A51.ZBBM)
+		INNER JOIN BPE_TA002 T2 ON A51.ZBBM=T2.KPIBH
+		WHERE A51.ZBJB='3' AND P2.FABH=?) LEFT JOIN BPE_AD002
+		 A2 ON A2.WDBM=yjzb ORDER BY A2.PX ,ZBPX
+	</sql>
+
+
+	<!-- 查询启用绩效年度 -->
+	<sql id="queryBPE_SC001">
+		select * from bpe_sc001 where yxzt='1'
+	</sql>
+
+	<!-- 查询改进机构 -->
+	<sql id="query_gj_orggj">
+		<dynamic>
+			select v.orgCode,v.orgname,v.orgType,v.orgTypeName from
+			BPC_SP007 s7
+			left join V_GORGXX v on s7.jgbm=v.orgCode
+			left join
+			BPE_PA003 p3 on p3.jgbm=s7.jgbm
+		</dynamic>
+		<dynamic>
+			<if name="jxlx" test="notNull">
+				and p3.jxlx=:jxlx and p3.jxnd=s7.nd
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="jxnd" test="notNull">
+				where s7.nd=:jxnd and p3.jgbm is null
+			</if>
+		</dynamic>
+		<dynamic>
+				AND V.orgid IS NOT NULL order by v.version
+		</dynamic>
+	
+	
+	</sql>
+
+	<!-- 查询启用年度考核单位 -->
+	<sql id="query_jxnd_org">
+			<dynamic>
+			SELECT orgCode,orgname,orgType,orgTypeName,NVL(TXTZ1,0) TXTZ1,NVL(TXTZ2,0) TXTZ2 FROM (
+			SELECT v.orgCode,v.orgname,v.orgType,v.orgTypeName,
+			(SELECT NVL(P1.TXTZ,0) FROM BPE_PA001 P1 LEFT JOIN BPE_PA003 P3 ON P1.FABH=P3.FABH WHERE
+			P3.JGBM=V.orgCode AND P1.TXTZ='1'
+		</dynamic>
+		<dynamic>
+			<if name="jxlx" test="notNull">
+				and p3.jxlx=:jxlx 
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="jxnd" test="notNull">
+				AND P3.JXND=:jxnd
+			</if>
+		</dynamic>
+		<dynamic>
+			AND ROWNUM=1) TXTZ1, (SELECT NVL(P1.TXTZ,0) FROM BPE_PA001 P1 LEFT JOIN BPE_PA003 P3 ON P1.FABH=P3.FABH WHERE
+			P3.JGBM=V.orgCode AND P1.TXTZ='2'
+		</dynamic>
+		<dynamic>
+			<if name="jxlx" test="notNull">
+				and p3.jxlx=:jxlx 
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="jxnd" test="notNull">
+				AND P3.JXND=:jxnd
+			</if>
+		</dynamic>
+		<dynamic>
+			AND ROWNUM=1) TXTZ2 FROM V_GORGXX V WHERE V.orgCode!='310114'  ORDER BY V.version)
+		    WHERE ((TO_NUMBER(NVL(TXTZ1,0))+TO_NUMBER(NVL(TXTZ2,0)))!=3)
+		</dynamic>
+	</sql>
+
+	<!-- 查询单位绩效明细表数据——批量设置 -->
+	<sql id="queryBPE_PA001">
+		<dynamic>
+			select p.fabh,p.famc,p.synd,p.sydx,p.txtz,(SELECT s.name FROM S103_CODE S WHERE S.CODE=P.TXTZ AND S.TYPEID='PMS.6004') txtzname from 
+			BPE_PA001 p where p.status='1' AND p.syxz='A'
+		</dynamic>
+
+		<dynamic>
+			<if name="synd" test="notNull">
+				AND p.synd=:synd
+			</if>
+		</dynamic>
+		<dynamic>
+			order by p.synd desc,p.famc,p.sydx
+		</dynamic>
+	</sql>
+
+
+	<!-- 根据单位（或个人）绩效方案编号删除绩效目标 -->
+	<sql id="deleteBPE_TA004">
+		<dynamic>
+			delete BPE_TA004 where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="jxfabh" test="notNull">
+				and jxfabh=:jxfabh
+			</if>
+		</dynamic>
+	</sql>
+
+	<!-- 岗位类型 -->
+	<sql id="queryS103_CODE">
+		select code,name from s103_code where typeid='PMS.5008' and
+		code like 'A%' and status='1'
+	</sql>
+
+</sqls>

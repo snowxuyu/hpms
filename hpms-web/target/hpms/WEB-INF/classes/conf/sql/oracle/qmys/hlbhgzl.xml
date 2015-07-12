@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="hlbhgzl">
+		
+		<sql id="queryAll">
+		 	<dynamic>
+				SELECT Z.YGBH,
+				a.ygxm,
+				Z.KSNM,
+				X.GRBCDF,
+				J.HLGZLDS,
+				J.HLDCDS,
+				(J.HLGZLDS + J.HLDCDS) zh,
+				J.HLBCDFZH,
+				(X.YCGZL + X.ECGZL) GRBHGZ
+				FROM hpxt_ygzcxx a,HPXT_RYGXPZ Z
+				LEFT JOIN HPXC_XCGRJS X
+				ON (z.ksnm = x.ksnm and Z.YGBH = X.YGBH AND Z.ND = X.ND AND Z.YD = X.YD)
+				LEFT JOIN HPBH_BHKSJS J
+				ON (Z.KSNM = J.KSNM AND Z.ND = J.ND AND Z.YD = J.YD)
+				where z.ygbh = a.ygbh
+		 	</dynamic>
+		 	<dynamic>
+			<if name="ksnm" test="notNull">
+				and z.ksnm=:ksnm
+			</if>
+			</dynamic>
+			<dynamic>
+				<if name="nd" test="notNull">
+					and z.nd=:nd
+				</if>
+			</dynamic>
+			<dynamic>
+				<if name="yd" test="notNull">
+					and z.yd=:yd
+				</if>
+			</dynamic>
+		</sql>
+		<sql id="querySum"> 
+			<dynamic>
+				select (sum(YCGZL)+sum(ECGZL)) hj from HPXC_XCGRJS where 1=1
+			</dynamic>
+			<dynamic>
+				<if name="ksnm" test="notNull">
+					and ksnm=:ksnm
+				</if>
+			</dynamic>
+			<dynamic>
+				<if name="nd" test="notNull">
+					and nd=:nd
+				</if>
+			</dynamic>
+			<dynamic>
+				<if name="yd" test="notNull">
+					and yd=:yd
+				</if>
+			</dynamic>
+		</sql>
+</sqls>

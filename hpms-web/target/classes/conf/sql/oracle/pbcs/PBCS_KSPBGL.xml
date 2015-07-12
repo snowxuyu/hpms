@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="PBCS_KSPBGL">
+		<sql id="query">
+			<dynamic>
+				select PBLSH,KSNM,ND,YD,PBR,PBZT,CJR,CJSJ,XGR,XGSJ,ZT from
+				PBCS_KSPBGL where 1=1
+			</dynamic>
+			<dynamic>
+				<if name="ksnm" test="notNull">
+					and ksnm=:ksnm
+				</if>
+			</dynamic>
+		</sql>
+</sqls>

@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="BPE_DWDLDJ">
+
+	<!-- 定量方案等级报告 -->
+
+	<!-- 查询绩效年度 -->
+	<sql id="quer_BPE_SC001_JXBH">
+		select jxbh TYPEID,jxnd NAME from bpe_sc001 where
+		status='1' order by
+		jxnd desc
+	</sql>
+
+	<!-- 查询绩效年度考核单位 -->
+	<sql id="quer_BPC_SP007_JGBM">
+		select v.orgname NAME,sp7.jgbm TYPEID from BPC_SP007 sp7
+		left join V_GORGXX v on v.orgCode=sp7.jgbm where sp7.nd=?
+	</sql>
+
+	<!-- 查询绩效年度考核单位单位方案名称 -->
+	<sql id="quer_BPE_PA003_JGFABH">
+		select jxfabh TYPEID,jxfamc NAME from BPE_PA003 where jxlx='A' and
+		jxnd=? and jgbm=?
+	</sql>
+	
+	
+	
+	
+	<!-- 查询绩效年度考核单位个人方案名称 -->
+	<sql id="quer_BPE_PA003_JGFABH_GR">
+		select jxfabh TYPEID,jxfamc NAME from BPE_PA003 where jxlx!='A' and
+		jxnd=? and jgbm=?
+	</sql>
+
+
+
+	<!-- 单位定量方案等级报告 -->
+	<sql id="queryBPE_RA001">
+		<dynamic>
+			select * from BPE_RA001 where 1=1 and jxlx='A'
+		</dynamic>
+		<dynamic>
+			<if name="jxnd" test="notNull">
+				and jxnd=:jxnd
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="jxdw" test="notNull">
+				and jgbm=:jxdw
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="famc" test="notNull">
+				and jgfabh=:famc
+			</if>
+		</dynamic>
+		<dynamic>
+			order by jxfamc
+		</dynamic>
+	</sql>
+
+	<!-- 单位定性方案等级报告 -->
+	<sql id="queryBPE_RA002">
+		<dynamic>
+			select * from BPE_RA002 where 1=1 and jxlx='A'
+		</dynamic>
+		<dynamic>
+			<if name="jxnd" test="notNull">
+				and jxnd=:jxnd
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="jxdw" test="notNull">
+				and jgbm=:jxdw
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="famc" test="notNull">
+				and jgfabh=:famc
+			</if>
+		</dynamic>
+		<dynamic>
+			order by jxfamc
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 单位综合评价等级报告表 -->
+	<sql id="queryBPE_RA003">
+		<dynamic>
+			select * from BPE_RA003 where 1=1 and jxlx='A'
+		</dynamic>
+		<dynamic>
+			<if name="jxnd" test="notNull">
+				and jxnd=:jxnd
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="jxdw" test="notNull">
+				and jgbm=:jxdw
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="famc" test="notNull">
+				and jgfabh=:famc
+			</if>
+		</dynamic>
+		<dynamic>
+			order by jxfamc
+		</dynamic>
+	</sql>
+	
+	<!-- 单位下一年度改进报告表 -->
+	<sql id="queryBPE_RA004">
+		<dynamic>
+			select * from BPE_RA004 where 1=1 and jxlx='A'
+		</dynamic>
+		<dynamic>
+			<if name="jxnd" test="notNull">
+				and jxnd=:jxnd
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="jxdw" test="notNull">
+				and jgbm=:jxdw
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="famc" test="notNull">
+				and jgfabh=:famc
+			</if>
+		</dynamic>
+		<dynamic>
+			order by jxfamc
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 个人定量方案等级报告 -->
+	<sql id="queryBPE_RA001_GR">
+		<dynamic>
+			select * from BPE_RA001 where 1=1 and jxlx!='A'
+		</dynamic>
+		<dynamic>
+			<if name="jxnd" test="notNull">
+				and jxnd=:jxnd
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="jxdw" test="notNull">
+				and jgbm=:jxdw
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="famc" test="notNull">
+				and jgfabh=:famc
+			</if>
+		</dynamic>
+		<dynamic>
+			order by jxfamc
+		</dynamic>
+	</sql>
+
+	<!-- 个人定性方案等级报告 -->
+	<sql id="queryBPE_RA002_GR">
+		<dynamic>
+			select * from BPE_RA002 where 1=1 and jxlx!='A'
+		</dynamic>
+		<dynamic>
+			<if name="jxnd" test="notNull">
+				and jxnd=:jxnd
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="jxdw" test="notNull">
+				and jgbm=:jxdw
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="famc" test="notNull">
+				and jgfabh=:famc
+			</if>
+		</dynamic>
+		<dynamic>
+			order by jxfamc
+		</dynamic>
+	</sql>
+	
+	
+	<!-- 个人综合评价等级报告表 -->
+	<sql id="queryBPE_RA003_GR">
+		<dynamic>
+			select * from BPE_RA003 where 1=1 and jxlx!='A'
+		</dynamic>
+		<dynamic>
+			<if name="jxnd" test="notNull">
+				and jxnd=:jxnd
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="jxdw" test="notNull">
+				and jgbm=:jxdw
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="famc" test="notNull">
+				and jgfabh=:famc
+			</if>
+		</dynamic>
+		<dynamic>
+			order by jxfamc
+		</dynamic>
+	</sql>
+	
+	<!-- 个人下一年度改进报告表 -->
+	<sql id="queryBPE_RA004_GR">
+		<dynamic>
+			select * from BPE_RA004 where 1=1 and jxlx!='A'
+		</dynamic>
+		<dynamic>
+			<if name="jxnd" test="notNull">
+				and jxnd=:jxnd
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="jxdw" test="notNull">
+				and jgbm=:jxdw
+			</if>
+		</dynamic>
+		<dynamic>
+			<if name="famc" test="notNull">
+				and jgfabh=:famc
+			</if>
+		</dynamic>
+		<dynamic>
+			order by jxfamc
+		</dynamic>
+	</sql>
+</sqls>

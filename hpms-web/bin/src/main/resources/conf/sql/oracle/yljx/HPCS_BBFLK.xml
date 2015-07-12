@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="hpcs_bbflk">
+	
+	<sql id="query_bbflk">
+		select t.bbbm bbbm, t.bbmc bbmc, t.bbjx bbjx from HPCS_BBFLK t
+	</sql>
+	
+	<!-- 查询所有班别 -->
+	<sql id="query_bb">
+			select b.bbbm id, b.bbmc text from HPCS_BBFLK  b
+	</sql>
+</sqls>

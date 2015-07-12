@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="PBCS_KSQQTJVO">
+
+	<sql id="query">
+		<dynamic>
+			select '1' as ksnm,'1' as ksmc,'1' as ygxm,'1' as zgts,'1' as
+			jxgz,'1' as bj,'1' as shiJ,'1' as cj,'1' as hj,'1' as tqj,'1' as
+			sj,'1' as gj from dual where 1=1
+		</dynamic>
+		<dynamic>
+			<if name="startTime" test="notNull">
+				and 1=1
+			</if>
+			<if name="endTime" test="notNull">
+				and 1=1
+			</if>
+			<if name="ksnm" test="notNull">
+				and 1=1
+			</if>
+		</dynamic>
+	</sql>
+</sqls>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="../sql.xsd" namespace="hpcs_pbbdr">
+	
+	<sql id="query_ksmc_ygmc">
+		<dynamic>
+			select t.* from hpcs_pbbdr t where 1 = 1
+		</dynamic>
+		<dynamic>
+			<if name="ksmc" test="notNull">
+				and t.ksmc like '%'||:ksmc||'%'
+			</if>
+			<if name="ygmc" test="notNull">
+				and t.ygmc like '%'||:ygmc||'%'
+			</if>
+		</dynamic>
+	</sql>
+</sqls>
